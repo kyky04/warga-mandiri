@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.androidnetworking.interfaces.UploadProgressListener;
 
 import java.io.File;
 
@@ -28,7 +27,8 @@ import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.UploadBannerResponse;
-import co.id.wargamandiri.services.OauthConstans;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,7 +113,7 @@ public class DialogPengumumanFragment extends DialogFragment {
 
     private void uploadPengumuman() {
         openDialog();
-        AndroidNetworking.post(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman")
+        AndroidNetworking.post(WEB_URL + "api/master/pengumuman")
                 .addBodyParameter(getPengumumanToUpload())
                 .build()
                 .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {
@@ -136,7 +136,7 @@ public class DialogPengumumanFragment extends DialogFragment {
 
     private void editPengumuman() {
         openDialog();
-        AndroidNetworking.put(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman/{id_pengumuman}")
+        AndroidNetworking.put(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
                 .addBodyParameter(getPengumumanToUpload())
                 .build()

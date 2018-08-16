@@ -46,9 +46,9 @@ import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemBanner;
 import co.id.wargamandiri.models.UploadBannerResponse;
-import co.id.wargamandiri.services.OauthConstans;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -188,7 +188,7 @@ public class DialogBannerFragment extends DialogFragment {
 
     private void uploadBanner(){
         openDialog();
-        AndroidNetworking.upload(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/banner-toko")
+        AndroidNetworking.upload(WEB_URL + "api/master/banner-toko")
                 .addMultipartParameter("id_toko", String.valueOf(1))
                 .addMultipartFile("gambar[]",file)
                 .addMultipartParameter("keterangan",etDeskripsi.getText().toString())

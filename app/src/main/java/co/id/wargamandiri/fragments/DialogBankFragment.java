@@ -10,9 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -28,7 +26,8 @@ import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemBank;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.UploadBannerResponse;
-import co.id.wargamandiri.services.OauthConstans;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +108,7 @@ public class DialogBankFragment extends DialogFragment {
 
     private void uploadPengumuman() {
         openDialog();
-        AndroidNetworking.post(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/bank")
+        AndroidNetworking.post(WEB_URL + "api/master/bank")
                 .addBodyParameter(getPengumumanToUpload())
                 .build()
                 .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {
@@ -132,7 +131,7 @@ public class DialogBankFragment extends DialogFragment {
 
     private void editPengumuman() {
         openDialog();
-        AndroidNetworking.put(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman/{id_pengumuman}")
+        AndroidNetworking.put(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
                 .addBodyParameter(getPengumumanToUpload())
                 .build()

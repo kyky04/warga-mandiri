@@ -35,8 +35,9 @@ import co.id.wargamandiri.R;
 import co.id.wargamandiri.adapter.AdapterPengumuman;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.PengumumanResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,7 +108,7 @@ public class KelolaDataPengumumanFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman")
+        AndroidNetworking.get(WEB_URL + "api/master/pengumuman")
                 .build()
                 .getAsObject(PengumumanResponse.class, new ParsedRequestListener() {
                     @Override
@@ -166,7 +167,7 @@ public class KelolaDataPengumumanFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman/{id_pengumuman}")
+        AndroidNetworking.delete(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

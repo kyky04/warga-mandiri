@@ -36,8 +36,9 @@ import co.id.wargamandiri.adapter.AdapterKategori;
 import co.id.wargamandiri.models.DataItemKategori;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.KategoriResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,7 +109,7 @@ public class MasterKetegoriFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/kategori")
+        AndroidNetworking.get(WEB_URL + "api/master/kategori")
                 .build()
                 .getAsObject(KategoriResponse.class, new ParsedRequestListener() {
                     @Override
@@ -167,7 +168,7 @@ public class MasterKetegoriFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/kategori/{id_kategori}")
+        AndroidNetworking.delete(WEB_URL + "api/master/kategori/{id_kategori}")
                 .addPathParameter("id_kategori", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

@@ -19,7 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.TokoResponse;
-import co.id.wargamandiri.services.OauthConstans;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +77,7 @@ public class KelolaDataTokoFragment extends Fragment {
 
     private void getToko(int id) {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/toko/{id_toko}")
+        AndroidNetworking.get(WEB_URL + "api/master/toko/{id_toko}")
                 .addPathParameter("id_toko", String.valueOf(id))
                 .build()
                 .getAsObject(TokoResponse.class, new ParsedRequestListener() {

@@ -3,4 +3,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="back">KEMBALI</string>
+    <string name="next">SELANJUTNYA</string>
+    <string name="username">Nama Pengguna</string>
+    <string name="password">Kata Sandi</string>
+    <string name="confirm_password">Konfirmasi Kata Sandi</string>
+    <string name="identity_number">No Identitas</string>
+    <string name="organization_type">Tipe Organisasi</string>
+    <string name="sign_up">DAFTAR</string>
+    <string name="forget_password">Lupa Kata Sandi? </string>
+    <string name="reset_password">RESET KATA SANDI</string>
+    <string name="registered_email">EMAIL TERDAFTAR</string>
 </resources>

@@ -32,15 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterKategori;
 import co.id.wargamandiri.adapter.AdapterProduk;
-import co.id.wargamandiri.models.DataItemKategori;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.DataItemProduk;
-import co.id.wargamandiri.models.KategoriResponse;
 import co.id.wargamandiri.models.ProdukResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,7 +109,7 @@ public class MasterProdukFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/produk")
+        AndroidNetworking.get(WEB_URL + "api/master/produk")
                 .addQueryParameter("includes","kategori,image")
                 .build()
                 .getAsObject(ProdukResponse.class, new ParsedRequestListener() {
@@ -171,7 +169,7 @@ public class MasterProdukFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/kategori/{id_kategori}")
+        AndroidNetworking.delete(WEB_URL + "api/master/kategori/{id_kategori}")
                 .addPathParameter("id_kategori", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

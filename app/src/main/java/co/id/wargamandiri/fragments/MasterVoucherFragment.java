@@ -32,14 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterPengumuman;
 import co.id.wargamandiri.adapter.AdapterVoucher;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.DataItemVoucher;
-import co.id.wargamandiri.models.PengumumanResponse;
 import co.id.wargamandiri.models.VoucherResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,7 +109,7 @@ public class MasterVoucherFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/voucher")
+        AndroidNetworking.get(WEB_URL + "api/master/voucher")
                 .build()
                 .getAsObject(VoucherResponse.class, new ParsedRequestListener() {
                     @Override
@@ -169,7 +168,7 @@ public class MasterVoucherFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/voucher/{id_voucher}")
+        AndroidNetworking.delete(WEB_URL + "api/master/voucher/{id_voucher}")
                 .addPathParameter("id_voucher", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

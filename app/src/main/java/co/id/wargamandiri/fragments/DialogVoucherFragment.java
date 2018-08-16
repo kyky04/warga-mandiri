@@ -29,8 +29,9 @@ import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.DataItemVoucher;
 import co.id.wargamandiri.models.UploadBannerResponse;
 import co.id.wargamandiri.models.UploadVoucherResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.CommonUtil;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -127,7 +128,7 @@ public class DialogVoucherFragment extends DialogFragment {
 
     private void uploadPengumuman() {
         openDialog();
-        AndroidNetworking.post(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/voucher")
+        AndroidNetworking.post(WEB_URL + "api/master/voucher")
                 .addBodyParameter(getVoucherUpload())
                 .build()
                 .getAsObject(UploadVoucherResponse.class, new ParsedRequestListener() {
@@ -150,7 +151,7 @@ public class DialogVoucherFragment extends DialogFragment {
 
     private void editPengumuman() {
         openDialog();
-        AndroidNetworking.put(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman/{id_pengumuman}")
+        AndroidNetworking.put(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
                 .build()
                 .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {

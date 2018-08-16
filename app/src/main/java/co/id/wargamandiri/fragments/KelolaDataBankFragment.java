@@ -33,13 +33,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.adapter.AdapterBank;
-import co.id.wargamandiri.adapter.AdapterPengumuman;
 import co.id.wargamandiri.models.BankResponse;
 import co.id.wargamandiri.models.DataItemBank;
-import co.id.wargamandiri.models.DataItemPengumuman;
-import co.id.wargamandiri.models.PengumumanResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,7 +108,7 @@ public class KelolaDataBankFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/bank")
+        AndroidNetworking.get(WEB_URL + "api/master/bank")
                 .build()
                 .getAsObject(BankResponse.class, new ParsedRequestListener() {
                     @Override
@@ -169,7 +167,7 @@ public class KelolaDataBankFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/bank/{id_bank}")
+        AndroidNetworking.delete(WEB_URL + "api/master/bank/{id_bank}")
                 .addPathParameter("id_bank", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

@@ -44,10 +44,10 @@ import co.id.wargamandiri.R;
 import co.id.wargamandiri.adapter.AdapterBanner;
 import co.id.wargamandiri.models.BannerResponse;
 import co.id.wargamandiri.models.DataItemBanner;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -118,7 +118,7 @@ public class KelolaBuatApkFragment extends Fragment {
 
     private void getBanner() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/banner-toko")
+        AndroidNetworking.get(WEB_URL + "api/master/banner-toko")
                 .build()
                 .getAsObject(BannerResponse.class, new ParsedRequestListener() {
                     @Override
@@ -196,7 +196,7 @@ public class KelolaBuatApkFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner){
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/banner-toko/{id_banner}")
+        AndroidNetworking.delete(WEB_URL + "api/master/banner-toko/{id_banner}")
                 .addPathParameter("id_banner", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

@@ -46,12 +46,11 @@ import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.adapter.AdapterUploadGambar;
 import co.id.wargamandiri.models.DataItemPengumuman;
-import co.id.wargamandiri.models.UploadBannerResponse;
 import co.id.wargamandiri.models.UploadGambar;
 import co.id.wargamandiri.models.UploadProdukResponse;
-import co.id.wargamandiri.services.OauthConstans;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -211,7 +210,7 @@ public class DialogProdukFragment extends DialogFragment {
     }
 
     private void uploadPengumuman() {
-        ANRequest.MultiPartBuilder builder = new ANRequest.MultiPartBuilder(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/produk");
+        ANRequest.MultiPartBuilder builder = new ANRequest.MultiPartBuilder(WEB_URL + "api/master/produk");
         for (int i = 0; i < filePathsFoto.size(); i++) {
             File file = new File(filePathsFoto.get(i));
             builder.addMultipartFile("gambar[]", file);

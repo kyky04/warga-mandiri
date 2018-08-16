@@ -19,8 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemKategori;
-import co.id.wargamandiri.models.DataItemKategori;
-import co.id.wargamandiri.services.OauthConstans;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL_STORAGE;
 
 public class AdapterKategori extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -74,7 +74,7 @@ public class AdapterKategori extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ViewHolder view = (ViewHolder) holder;
             final DataItemKategori o = items.get(position);
             view.title.setText(o.getKeterangan());
-            Glide.with(ctx).load(OauthConstans.UPLOAD_URL + o.getGambar()).into(view.imageBg);
+            Glide.with(ctx).load(WEB_URL_STORAGE + o.getGambar()).into(view.imageBg);
             view.btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
