@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -20,7 +21,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
                 android:padding="@dimen/spacing_medium"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:contentInsetStartWithNavigation="0dp"
@@ -46,23 +47,12 @@
 
             </android.support.v7.widget.Toolbar>
 
-            <TextView
-                android:id="@+id/tv_welcome"
-                fontPath="fonts/lato_regular.ttf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="@dimen/spacing_medium"
-                android:text="SELAMAT DATANG"
-                android:textColor="@color/white"
-                tools:ignore="MissingPrefix" />
-
-
-        </android.support.design.widget.AppBarLayout>
+          </android.support.design.widget.AppBarLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,7 +203,7 @@
                                     fontPath="fonts/lato_regular.ttf"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="KELOLA TOKO"
+                                    android:text="MEMBER"
                                     android:textSize="12sp"
                                     tools:ignore="MissingPrefix" />
 
@@ -265,37 +255,208 @@
                         </RelativeLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/spacing_very_small"
+                    android:paddingLeft="@dimen/spacing_very_small"
+                    android:paddingRight="@dimen/spacing_very_small"
+                    android:paddingTop="@dimen/spacing_very_small"
+                    android:visibility="visible">
+
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_medium"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="2dp">
+
+                        <RelativeLayout
+                            android:id="@+id/btn_user"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/img_user"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:padding="@dimen/spacing_large"
+                                android:src="@drawable/ic_launcher_background" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_below="@+id/img_user"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/spacing_medium">
+
+                                <TextView
+                                    fontPath="fonts/lato_regular.ttf"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="USER"
+                                    android:textSize="12sp"
+                                    tools:ignore="MissingPrefix" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_medium"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="2dp">
+
+                        <RelativeLayout
+                            android:id="@+id/btn_bank"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/img_bank"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:padding="@dimen/spacing_large"
+                                android:src="@drawable/ic_launcher_background" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_below="@+id/img_bank"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/spacing_medium">
+
+                                <TextView
+                                    fontPath="fonts/lato_regular.ttf"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="BANK"
+                                    android:textSize="12sp"
+                                    tools:ignore="MissingPrefix" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/spacing_very_small"
+                    android:paddingLeft="@dimen/spacing_very_small"
+                    android:paddingRight="@dimen/spacing_very_small"
+                    android:paddingTop="@dimen/spacing_very_small"
+                    android:visibility="visible">
+
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_medium"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="2dp">
+
+                        <RelativeLayout
+                            android:id="@+id/btn_banner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/img_banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:padding="@dimen/spacing_large"
+                                android:src="@drawable/ic_launcher_background" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_below="@+id/img_banner"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/spacing_medium">
+
+                                <TextView
+                                    fontPath="fonts/lato_regular.ttf"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="BANNER"
+                                    android:textSize="12sp"
+                                    tools:ignore="MissingPrefix" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_medium"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="2dp">
+
+                        <RelativeLayout
+                            android:id="@+id/btn_pengumuman"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/img_pengumuman"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:padding="@dimen/spacing_large"
+                                android:src="@drawable/ic_launcher_background" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_below="@+id/img_pengumuman"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/spacing_medium">
+
+                                <TextView
+                                    fontPath="fonts/lato_regular.ttf"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="PENGUMUMAN"
+                                    android:textSize="12sp"
+                                    tools:ignore="MissingPrefix" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+
             </LinearLayout>
+
         </ScrollView>
-
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/line"
-            android:background="@color/grey_500" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:tabPaddingEnd="0dp"
-            app:tabPaddingStart="0dp"
-            app:tabTextAppearance="@style/MyCustomTabTextAppearance" />
-
-
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

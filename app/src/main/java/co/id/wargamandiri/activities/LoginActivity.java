@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_signin:
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, MenuActivity.class));
                 break;
             case R.id.tv_register:
                 startActivity(new Intent(LoginActivity.this, DaftarActivity.class));

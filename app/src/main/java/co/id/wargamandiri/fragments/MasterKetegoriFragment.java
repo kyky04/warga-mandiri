@@ -73,12 +73,12 @@ public class MasterKetegoriFragment extends Fragment {
 
         rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapterBanner = new AdapterKategori(getActivity());
-        getPengumuman();
+        getKategori();
         rvBanner.setAdapter(adapterBanner);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getPengumuman();
+                getKategori();
             }
         });
 
@@ -107,9 +107,9 @@ public class MasterKetegoriFragment extends Fragment {
         showDialogFullscreen();
     }
 
-    private void getPengumuman() {
+    private void getKategori() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/kategori")
+        AndroidNetworking.get(WEB_URL + "api/backend/master/kategori")
                 .build()
                 .getAsObject(KategoriResponse.class, new ParsedRequestListener() {
                     @Override
@@ -148,7 +148,7 @@ public class MasterKetegoriFragment extends Fragment {
         newFragment.setOnCallbackResult(new DialogKategoriFragment.CallbackResult() {
             @Override
             public void sendResult(Object obj) {
-                getPengumuman();
+                getKategori();
             }
         });
     }
@@ -162,7 +162,7 @@ public class MasterKetegoriFragment extends Fragment {
         newFragment.setOnCallbackResult(new DialogPengumumanFragment.CallbackResult() {
             @Override
             public void sendResult(Object obj) {
-                getPengumuman();
+                getKategori();
             }
         });
     }
@@ -175,7 +175,7 @@ public class MasterKetegoriFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(getActivity(), "DataItemPengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-                        getPengumuman();
+                        getKategori();
                     }
 
                     @Override

@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 
 import java.util.HashMap;
 
-import co.id.wargamandiri.activities.LoginActivity;
 import co.id.wargamandiri.activities.MainActivity;
+import co.id.wargamandiri.activities.LoginActivity;
 
 /**
  * Created by Comp on 7/29/2017.

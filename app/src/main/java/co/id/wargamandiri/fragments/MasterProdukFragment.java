@@ -109,8 +109,8 @@ public class MasterProdukFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/produk")
-                .addQueryParameter("includes","kategori,image")
+        AndroidNetworking.get(WEB_URL + "api/backend/produk")
+//                .addQueryParameter("includes","kategori,image")
                 .build()
                 .getAsObject(ProdukResponse.class, new ParsedRequestListener() {
                     @Override
