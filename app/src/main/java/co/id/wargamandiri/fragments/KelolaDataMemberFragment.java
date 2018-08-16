@@ -33,7 +33,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
+import co.id.wargamandiri.adapter.AdapterMember;
 import co.id.wargamandiri.adapter.AdapterUser;
+import co.id.wargamandiri.models.DataItemMember;
+import co.id.wargamandiri.models.MemberResponse;
 import co.id.wargamandiri.models.UserResponse;
 import co.id.wargamandiri.utils.Session;
 
@@ -49,11 +52,10 @@ public class KelolaDataMemberFragment extends Fragment {
     RecyclerView rvBanner;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
-    @BindView(R.id.fab_add_banner)
-    FloatingActionButton fabAddBanner;
+
     Unbinder unbinder;
 
-    AdapterUser adapterBanner;
+    AdapterMember adapterBanner;
 
     Session session;
 
@@ -66,12 +68,12 @@ public class KelolaDataMemberFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_kelola_data_toko, container, false);
+        View view = inflater.inflate(R.layout.fragment_kelola_data_member, container, false);
         unbinder = ButterKnife.bind(this, view);
 
 
         rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterUser(getActivity());
+        adapterBanner = new AdapterMember(getActivity());
         getAllMember(1);
         rvBanner.setAdapter(adapterBanner);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -81,17 +83,18 @@ public class KelolaDataMemberFragment extends Fragment {
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterUser.OnItemClick() {
+        adapterBanner.setOnItemClick(new AdapterMember.OnItemClick() {
             @Override
-            public void onItemEditClick(int pos, UserResponse dataItemBanner) {
-                showEditDialogFullscreen(dataItemBanner);
+            public void onItemEditClick(int pos, DataItemMember dataItemBanner) {
+//                showEditDialogFullscreen(dataItemBanner);
             }
 
             @Override
-            public void onItemDeleteClick(int pos, UserResponse dataItemBanner) {
+            public void onItemDeleteClick(int pos, DataItemMember dataItemBanner) {
                 deleteBanner(dataItemBanner.getId());
             }
         });
+
         return view;
     }
 
@@ -101,29 +104,40 @@ public class KelolaDataMemberFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.fab_add_banner)
-    public void onViewClicked() {
-        showDialogFullscreen();
-    }
 
     private void getAllMember(int id_toko) {
         refresh.setRefreshing(true);
         AndroidNetworking.get(WEB_URL + "api/backend/member")
                 .addPathParameter("id_toko", String.valueOf(id_toko))
                 .build()
-                .getAsObjectList(UserResponse.class, new ParsedRequestListener<List<UserResponse>>() {
+                .getAsObject(MemberResponse.class, new ParsedRequestListener() {
                     @Override
-                    public void onResponse(List<UserResponse> response) {
+                    public void onResponse(Object response) {
                         refresh.setRefreshing(false);
-                        adapterBanner.swap(response);
+                        if (response instanceof MemberResponse){
+                            adapterBanner.swap(((MemberResponse) response).getData());
+                        }
+//                        adapterBanner.swap(response);
                     }
 
                     @Override
                     public void onError(ANError anError) {
-                        Log.d("ERROR RESPONSE", anError.getErrorDetail());
-                        refresh.setRefreshing(false);
+
                     }
                 });
+//                .getAsObjectList(MemberResponse.class, new ParsedRequestListener<List<MemberResponse>>() {
+//                    @Override
+//                    public void onResponse(List<UserResponse> response) {
+//                        refresh.setRefreshing(false);
+//                        adapterBanner.swap(response);
+//                    }
+//
+//                    @Override
+//                    public void onError(ANError anError) {
+//                        Log.d("ERROR RESPONSE", anError.getErrorDetail());
+//                        refresh.setRefreshing(false);
+//                    }
+//                });
     }
 
     @Override

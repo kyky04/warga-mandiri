@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,7 +100,8 @@ public class MenuFragment extends Fragment {
 
                 break;
             case R.id.btn_notifikasi:
-                goToActivity(TransaksiActivity.class);
+//                goToActivity(TransaksiActivity.class);
+                Toast.makeText(getActivity(), "Under Construction", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_user:
                 FragmentManager fragmentManager = getFragmentManager();
@@ -129,7 +131,7 @@ public class MenuFragment extends Fragment {
                 break;
             case R.id.btn_pengumuman:
                 FragmentManager fragmentManagerPengumuman = getFragmentManager();
-                KelolaBannerFragment newFragmentPengumuman = new KelolaBannerFragment();
+                KelolaDataPengumumanFragment newFragmentPengumuman = new KelolaDataPengumumanFragment();
                 FragmentTransaction transactionPengumuman = fragmentManagerPengumuman.beginTransaction();
                 transactionPengumuman.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transactionPengumuman.add(android.R.id.content, newFragmentPengumuman).addToBackStack(null).commit();

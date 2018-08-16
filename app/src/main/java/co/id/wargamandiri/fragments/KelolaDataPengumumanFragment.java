@@ -108,7 +108,7 @@ public class KelolaDataPengumumanFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/pengumuman")
+        AndroidNetworking.get(WEB_URL + "api/backend/master/news")
                 .build()
                 .getAsObject(PengumumanResponse.class, new ParsedRequestListener() {
                     @Override
