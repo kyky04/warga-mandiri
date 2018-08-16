@@ -118,7 +118,7 @@ public class KelolaBannerFragment extends Fragment {
 
     private void getBanner() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/banner-toko")
+        AndroidNetworking.get(WEB_URL + "api/backend/master/slider")
                 .build()
                 .getAsObject(BannerResponse.class, new ParsedRequestListener() {
                     @Override

@@ -71,7 +71,6 @@ public class DialogPengumumanFragment extends DialogFragment {
         args.putString("isi", dataItemPengumuman.getIsi());
         args.putString("judul", dataItemPengumuman.getJudul());
         myFragment.setArguments(args);
-
         return myFragment;
     }
 

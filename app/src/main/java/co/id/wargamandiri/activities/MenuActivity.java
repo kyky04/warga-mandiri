@@ -97,8 +97,8 @@ public class MenuActivity extends AppCompatActivity {
         viewPager.setAdapter(vpAdapter);
 
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_toko).setText("Toko"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_toko).setText("Kelola"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_toko).setText("Buat"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_kelola).setText("Kelola"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_buat_apk).setText("Buat APK"));
 
         viewPager.setCurrentItem(0);
 

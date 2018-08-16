@@ -210,7 +210,7 @@ public class DialogProdukFragment extends DialogFragment {
     }
 
     private void uploadPengumuman() {
-        ANRequest.MultiPartBuilder builder = new ANRequest.MultiPartBuilder(WEB_URL + "api/master/produk");
+        ANRequest.MultiPartBuilder builder = new ANRequest.MultiPartBuilder(WEB_URL + "api/backend/produk");
         for (int i = 0; i < filePathsFoto.size(); i++) {
             File file = new File(filePathsFoto.get(i));
             builder.addMultipartFile("gambar[]", file);

@@ -86,7 +86,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:padding="@dimen/spacing_large"
-                            android:src="@drawable/ic_launcher_background" />
+                            android:src="@drawable/ic_pesanan" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:padding="@dimen/spacing_large"
-                            android:src="@drawable/ic_launcher_background" />
+                            android:src="@drawable/ic_konfirmasi" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
