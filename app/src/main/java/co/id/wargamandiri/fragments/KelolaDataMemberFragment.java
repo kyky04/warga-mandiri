@@ -34,10 +34,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.adapter.AdapterUser;
-import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.UserResponse;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,7 +108,7 @@ public class KelolaDataMemberFragment extends Fragment {
 
     private void getAllMember(int id_toko) {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/toko/{id_toko}/user")
+        AndroidNetworking.get(WEB_URL + "api/master/toko/{id_toko}/user")
                 .addPathParameter("id_toko", String.valueOf(id_toko))
                 .build()
                 .getAsObjectList(UserResponse.class, new ParsedRequestListener<List<UserResponse>>() {
@@ -165,7 +165,7 @@ public class KelolaDataMemberFragment extends Fragment {
     }
 
     private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/pengumuman/{id_pengumuman}")
+        AndroidNetworking.delete(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {

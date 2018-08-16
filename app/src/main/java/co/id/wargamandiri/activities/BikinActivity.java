@@ -34,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
+import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -50,6 +51,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -63,6 +65,8 @@ import co.id.wargamandiri.helper.AXmlEditor;
 import co.id.wargamandiri.helper.Config;
 import co.id.wargamandiri.helper.FileUtil;
 import co.id.wargamandiri.helper.StringUtils;
+import co.id.wargamandiri.models.LoginResponse;
+import co.id.wargamandiri.utils.CommonUtil;
 import kellinwood.security.zipsigner.ZipSigner;
 import kellinwood.security.zipsigner.optional.CustomKeySigner;
 
@@ -96,7 +100,7 @@ public class BikinActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private String path;
-    private File file;
+    private File fileImage;
 
     public class startBikin extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... params) {
@@ -172,9 +176,11 @@ public class BikinActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, final int resultCode, Intent data) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
-            file = new File(image.getPath());
+            fileImage = new File(image.getPath());
             path = image.getPath();
-            Glide.with(this).load(file).into(imageBg);
+            Glide.with(this).load(fileImage).into(imageBg);
+            gambaricon = path;
+
         }
     }
 
@@ -314,6 +320,52 @@ public class BikinActivity extends AppCompatActivity {
         tempFile.delete();
     }
 
+
+    public void addDataLogin(File zipFile, File[] files) throws IOException {
+        tempFile(zipFile);
+        byte[] buf = new byte[1024];
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
+        for (ZipEntry entry = zin.getNextEntry(); entry != null; entry = zin.getNextEntry()) {
+            int len;
+            String name = entry.getName();
+            boolean notInFiles = true;
+            for (File f : files) {
+                if (f.getName().equals(name)) {
+                    notInFiles = false;
+                    break;
+                }
+            }
+            if (notInFiles) {
+                out.putNextEntry(new ZipEntry(name));
+                while (true) {
+                    len = zin.read(buf);
+                    if (len <= 0) {
+                        break;
+                    }
+                    out.write(buf, 0, len);
+                }
+            }
+        }
+        zin.close();
+        for (int i = 0; i < files.length; i++) {
+            int len;
+            InputStream in = new FileInputStream(files[i]);
+            out.putNextEntry(new ZipEntry("assets/" + files[i].getName()));
+            while (true) {
+                len = in.read(buf);
+                if (len <= 0) {
+                    break;
+                }
+                out.write(buf, 0, len);
+            }
+            out.closeEntry();
+            in.close();
+        }
+        out.close();
+        tempFile.delete();
+    }
+
     public void addIcon(File zipFile, File[] files) throws IOException {
         tempFile(zipFile);
         byte[] buf = new byte[1024];
@@ -407,6 +459,8 @@ public class BikinActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     public void copyIcon(File src, File dst) throws IOException {
         InputStream in;
@@ -547,8 +601,9 @@ public class BikinActivity extends AppCompatActivity {
                 if (lanjut) {
                     num = 333;
                     try {
+                        createDataLogin();
                         copy(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk"));
-                        copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
+//                        copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
 //                        editManifest();
                         if (gambaricon == null) {
                             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un");
@@ -556,7 +611,7 @@ public class BikinActivity extends AppCompatActivity {
                             file = new File(gambaricon);
                         }
                         try {
-                            copyIcon(filesrc, new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png"));
+                            copyIcon(file, new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -565,11 +620,13 @@ public class BikinActivity extends AppCompatActivity {
                         fileco = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/co");
                         File[] filemanifest = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml")};
                         File[] fileicon = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png")};
+                        File[] filelogin = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/data_login.json")};
                         try {
                             addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un")});
                             addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/co")});
-                            addManifest(fileapk, filemanifest);
+//                            addManifest(fileapk, filemanifest);
                             addIcon(fileapk, fileicon);
+                            addDataLogin(fileapk, filelogin);
                             new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk").renameTo(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk"));
                             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk");
                             File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/NamaToko.apk");
@@ -587,12 +644,12 @@ public class BikinActivity extends AppCompatActivity {
                             } catch (Throwable th) {
                                 status = "gagal";
                                 lanjut = false;
-                                Log.d("ERRORTH", String.valueOf(th.getCause()));
+                                Log.d("ERRORTH", String.valueOf(th.getMessage()));
                             }
                         } catch (IOException e2) {
                             status = "gagal";
                             lanjut = false;
-                            Log.d("ERRORE2", String.valueOf(e2.getCause()));
+                            Log.d("ERRORE2", String.valueOf(e2.getMessage())+" "+e2.getStackTrace());
                         }
                     } catch (IOException e3) {
                         status = "gagal";
@@ -624,6 +681,23 @@ public class BikinActivity extends AppCompatActivity {
             file.renameTo(file);
             fileco.renameTo(file);
         }
+    }
+
+
+
+    private void createDataLogin() {
+        String myJson = null;
+        try {
+            myJson = CommonUtil.inputStreamToString(getAssets().open("data_login.json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson gson = new Gson();
+        LoginResponse dataUser = new Gson().fromJson(myJson, LoginResponse.class);
+        myJson = gson.toJson(dataUser);
+
+        writeToFile(myJson);
     }
 
     public static String getPath(Context context, Uri uri) {
@@ -663,7 +737,7 @@ public class BikinActivity extends AppCompatActivity {
                 return uri.getLastPathSegment();
             }
             return getDataColumn(context, uri, null, null);
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("fileImage".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         } else {
             return null;
@@ -704,5 +778,26 @@ public class BikinActivity extends AppCompatActivity {
 
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    public void writeToFile(String data) {
+
+        final File file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/data_login.json");
+        Log.d("TAG", "writeToFile: " + file.getName());
+        // Save your stream, don't forget to flush() it before closing it.
+
+        try {
+            file.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(file);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.append(data);
+
+            myOutWriter.close();
+
+            fOut.flush();
+            fOut.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 }

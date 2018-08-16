@@ -1,0 +1,104 @@
+{
+  "data": {
+    "admin": false,
+    "email": "user@email.com",
+    "id": 2,
+    "id_toko": 1,
+    "name": "User",
+    "nomor_telepon": "082240386822",
+    "order": [
+      {
+        "cod": false,
+        "created_at": "2018-08-12 16:13:48",
+        "created_by": 2,
+        "id": 1,
+        "id_address": 1,
+        "id_toko": 1,
+        "id_user": 2,
+        "kode": "TRX",
+        "status": 4,
+        "updated_at": "2018-08-15 01:28:48",
+        "updated_by": 1
+      },
+      {
+        "cod": false,
+        "created_at": "2018-08-15 13:07:56",
+        "created_by": 2,
+        "id": 3,
+        "id_address": 1,
+        "id_toko": 1,
+        "id_user": 2,
+        "kode": "TR2018081500001",
+        "status": 0,
+        "updated_at": "2018-08-15 13:07:56",
+        "updated_by": 1
+      },
+      {
+        "cod": false,
+        "created_at": "2018-08-15 13:09:56",
+        "created_by": 2,
+        "id": 4,
+        "id_address": 1,
+        "id_toko": 1,
+        "id_user": 2,
+        "kode": "TR2018081500002",
+        "status": 0,
+        "updated_at": "2018-08-15 13:09:56",
+        "updated_by": 1
+      },
+      {
+        "cod": false,
+        "created_at": "2018-08-15 13:12:29",
+        "created_by": 2,
+        "id": 5,
+        "id_address": 1,
+        "id_toko": 1,
+        "id_user": 2,
+        "kode": "TR2018081500003",
+        "status": 0,
+        "updated_at": "2018-08-15 13:12:29",
+        "updated_by": 1
+      }
+    ],
+    "saldo": "10000.00",
+    "status": 1,
+    "toko": {
+      "alamat": "alamat",
+      "bank": [
+        {
+          "atas_nama": "Rizki Fauzi Rahman",
+          "created_at": "2018-08-16 02:46:48",
+          "created_by": 1,
+          "id": 24,
+          "id_toko": 1,
+          "nama_bank": "Mandiri",
+          "nomor_rekening": "12345678"
+        }
+      ],
+      "bbm": "zzegarr",
+      "biaya_cod": "0.00",
+      "cod": true,
+      "deskripsi": "\u003cp\u003e\u003cb\u003eZzegarr\u003c/b\u003e \u003cmeta http-equiv\u003d\"Content-Type\" content\u003d\"text/html;charset\u003dUTF-8\"\u003e\u003cspan style\u003d\"color: rgb(0, 0, 0); font-family: Lato, \"Helvetica Neue\", Arial, Helvetica, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\"\u003e \u003c/span\u003e\u003cspan style\u003d\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12px;\"\u003eadalah merek air mineral atau air minum dalam kemasan (AMDK) yang diproduksi oleh PT. Coca-Cola Bottling Indonesia, Bekasi. Air mineral tersebut juga dikenal sebagai I-Lohas di Jepang\u003c/span\u003e\u003c/p\u003e",
+      "email": "zzegarr@email.com",
+      "facebook": "zzegarr@facebook.com",
+      "id": 1,
+      "id_kota": 23,
+      "id_provinsi": 9,
+      "instagram": "zzegarr",
+      "jne": true,
+      "kode_pos": "40286",
+      "nama": "RR Fashion",
+      "nama_kota": "Kota Bandung",
+      "nama_provinsi": "Jawa Barat",
+      "nomor_telepon": "082240386822",
+      "pos": true,
+      "tiki": true,
+      "twitter": "zzegarr",
+      "updated_at": "2018-08-16 02:47:07",
+      "updated_by": 1,
+      "whatsapp": "082240386822"
+    },
+    "updated_at": "2018-08-15 00:11:26"
+  },
+  "status": true
+}

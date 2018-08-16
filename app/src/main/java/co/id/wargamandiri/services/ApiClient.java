@@ -19,6 +19,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+
 public class ApiClient {
     private static Retrofit mRetrofit;
 
@@ -59,7 +61,7 @@ public class ApiClient {
         Gson gson1 = builder.create();
 
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(OauthConstans.AUTHENTICATION_SERVER_URL)
+                .baseUrl(WEB_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson1))
                 .client(client)
                 .build();

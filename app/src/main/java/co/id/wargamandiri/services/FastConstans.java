@@ -1,8 +1,14 @@
 package co.id.wargamandiri.services;
 
 public class FastConstans {
-    public static String LIST_PEGAWAI = OauthConstans.AUTHENTICATION_SERVER_URL + "api/pegawai";
-    public static String LIST_PROYEK = OauthConstans.AUTHENTICATION_SERVER_URL + "api/proyek";
-    public static String COUNT_PROYEK = OauthConstans.AUTHENTICATION_SERVER_URL + "api/proyek/count";
-    public static String COUNT_PEGAWAI = OauthConstans.AUTHENTICATION_SERVER_URL + "api/pegawai/count";
+
+        public static final String WEB_URL = "http://192.168.0.131/shope/public/";
+        public static final String WEB_URL_API = WEB_URL + "api/";
+        public static final String WEB_URL_STORAGE = WEB_URL + "storage/";
+        //    public static final String WEB_URL_API = "http://192.168.1.4/khsonline/public/api/";
+        public static final String PRODUK = WEB_URL_API + "backend/produk";
+        public static final String KATEGORI = WEB_URL_API + "backend/master/kategori";
+        public static final String SLIDER = WEB_URL_API + "backend/master/slider";
+        public static final String LOGIN = WEB_URL_API + "login";
+
 }

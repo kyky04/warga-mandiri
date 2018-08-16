@@ -18,9 +18,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemProduk;
-import co.id.wargamandiri.models.DataItemProduk;
-import co.id.wargamandiri.services.OauthConstans;
 import co.id.wargamandiri.utils.Tools;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL_STORAGE;
 
 public class AdapterProduk extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -82,7 +82,7 @@ public class AdapterProduk extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
             view.name.setText(o.getNama());
 
-            Glide.with(ctx).load(OauthConstans.UPLOAD_URL + o.getGambarUtama()).into(view.image);
+            Glide.with(ctx).load(WEB_URL_STORAGE + o.getGambarUtama()).into(view.image);
 //            view.btnEdit.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {

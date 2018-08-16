@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemBanner;
-import co.id.wargamandiri.services.OauthConstans;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL_STORAGE;
 
 public class AdapterBanner extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -76,7 +76,7 @@ public class AdapterBanner extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             view.title.setText(o.getKeterangan());
 //            Glide.with(ctx).load(OauthConstans.UPLOAD_URL + o.getGambar()).into(view.imageBg);
             Picasso.get()
-                    .load(OauthConstans.UPLOAD_URL + o.getGambar())
+                    .load(WEB_URL_STORAGE + o.getGambar())
                     .resize(50, 50)
                     .centerCrop()
                     .into(view.imageBg);

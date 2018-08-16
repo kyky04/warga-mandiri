@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.LoginActivity">
+        <activity android:name=".activities.BikinActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
         <activity android:name=".activities.DaftarActivity" />
         <activity android:name=".activities.DataMasterActivity" />
         <activity android:name=".activities.KelolaActivity" />
-        <!--<activity android:name=".activities.LoginActivity"></activity>-->
+        <activity android:name=".activities.LoginActivity"></activity>
     </application>
 
 </manifest>

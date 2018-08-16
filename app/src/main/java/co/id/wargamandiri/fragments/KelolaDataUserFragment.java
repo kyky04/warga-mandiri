@@ -18,9 +18,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.models.TokoResponse;
 import co.id.wargamandiri.models.UserResponse;
-import co.id.wargamandiri.services.OauthConstans;
+
+import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +72,7 @@ public class KelolaDataUserFragment extends Fragment {
 
     private void getUser(int id) {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(OauthConstans.AUTHENTICATION_SERVER_URL + "api/toko/{id_toko}/pemilik")
+        AndroidNetworking.get(WEB_URL + "api/toko/{id_toko}/pemilik")
                 .addPathParameter("id_toko", String.valueOf(id))
                 .build()
                 .getAsObject(UserResponse.class, new ParsedRequestListener() {

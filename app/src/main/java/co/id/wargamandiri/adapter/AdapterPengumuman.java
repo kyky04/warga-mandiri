@@ -6,11 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemPengumuman;
-import co.id.wargamandiri.models.DataItemPengumuman;
-import co.id.wargamandiri.services.OauthConstans;
 
 public class AdapterPengumuman extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     
