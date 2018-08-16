@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/bt_close"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/ic_close_black_24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Tambah Voucher"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/bt_save"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/spacing_xsmall"
+                android:paddingRight="@dimen/spacing_xsmall"
+                android:text="SAVE"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:scrollingCache="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_large">
+
+            <EditText
+                android:id="@+id/et_kode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:hint="Kode Voucher"
+                android:maxLines="2"
+                android:minHeight="@dimen/spacing_xxlarge"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColorHint="@color/grey_40" />
+
+            <EditText
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:id="@+id/et_tanggal_awal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:gravity="top"
+                android:hint="Tanggal Mulai"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColorHint="@color/grey_40" />
+
+            <EditText
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:id="@+id/et_tanggal_akhir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:gravity="top"
+                android:hint="Tanggal Akhir"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColorHint="@color/grey_40" />
+
+            <EditText
+                android:inputType="number"
+                android:id="@+id/et_jumlah_potongan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:gravity="top"
+                android:hint="Jumlah Potongan"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColorHint="@color/grey_40" />
+
+            <EditText
+                android:inputType="number"
+                android:id="@+id/et_minimal_belanja"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:gravity="top"
+                android:hint="Minimal Belnaja"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColorHint="@color/grey_40" />
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

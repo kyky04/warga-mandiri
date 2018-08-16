@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_small"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <android.support.design.widget.FloatingActionButton
+        app:fabSize="mini"
+        android:id="@+id/delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_close_black_24dp"
+        android:tint="@color/white"
+        app:backgroundTint="@color/grey_500" />
+
+    <LinearLayout
+        android:id="@+id/view_item"
+        android:layout_width="130dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large">
+
+
+        <ImageView
+            android:id="@+id/img_gambar"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_path"
+            fontPath="fonts/varela_regular.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SUBJECT"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</RelativeLayout>
+
