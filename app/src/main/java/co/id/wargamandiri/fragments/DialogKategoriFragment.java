@@ -190,7 +190,7 @@ public class DialogKategoriFragment extends DialogFragment {
 
     private void uploadBanner() {
         openDialog();
-        AndroidNetworking.upload(WEB_URL + "api/master/kategori")
+        AndroidNetworking.upload(WEB_URL + "api/backend/master/kategori")
                 .addMultipartFile("gambar", file)
                 .addMultipartParameter("id_toko", String.valueOf(1))
                 .addMultipartParameter("nama", etJudul.getText().toString())

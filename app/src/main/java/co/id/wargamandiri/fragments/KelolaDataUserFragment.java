@@ -87,7 +87,7 @@ public class KelolaDataUserFragment extends Fragment {
                                 etEmail.setText(((UserResponse) response).getEmail());
                             }
                         }catch (Exception e){
-                            Toast.makeText(getActivity(), "Data Gagal Diambil", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "DataDaftar Gagal Diambil", Toast.LENGTH_SHORT).show();
                         }
                     }
 

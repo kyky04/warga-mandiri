@@ -108,7 +108,7 @@ public class KelolaDataMemberFragment extends Fragment {
 
     private void getAllMember(int id_toko) {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/toko/{id_toko}/user")
+        AndroidNetworking.get(WEB_URL + "api/backend/member")
                 .addPathParameter("id_toko", String.valueOf(id_toko))
                 .build()
                 .getAsObjectList(UserResponse.class, new ParsedRequestListener<List<UserResponse>>() {

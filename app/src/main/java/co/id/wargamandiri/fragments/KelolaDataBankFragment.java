@@ -108,7 +108,7 @@ public class KelolaDataBankFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/bank")
+        AndroidNetworking.get(WEB_URL + "api/backend/master/bank")
                 .build()
                 .getAsObject(BankResponse.class, new ParsedRequestListener() {
                     @Override

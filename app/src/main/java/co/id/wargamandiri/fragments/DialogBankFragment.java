@@ -24,7 +24,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.DataItemBank;
-import co.id.wargamandiri.models.DataItemPengumuman;
+import co.id.wargamandiri.models.DataItemBank;
 import co.id.wargamandiri.models.UploadBannerResponse;
 
 import static co.id.wargamandiri.services.FastConstans.WEB_URL;
@@ -50,7 +50,7 @@ public class DialogBankFragment extends DialogFragment {
     private ProgressDialog progressDialog;
     private String path;
     private File file;
-    private int id_pengumuman;
+    private int id_bank;
 
     public void setOnCallbackResult(final CallbackResult callbackResult) {
         this.callbackResult = callbackResult;
@@ -60,13 +60,13 @@ public class DialogBankFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static DialogBankFragment newInstance(DataItemPengumuman dataItemPengumuman) {
+    public static DialogBankFragment newInstance(DataItemBank dataItemBank) {
         DialogBankFragment myFragment = new DialogBankFragment();
 
         Bundle args = new Bundle();
-        args.putInt("id_pengumuman", dataItemPengumuman.getId());
-        args.putString("isi", dataItemPengumuman.getIsi());
-        args.putString("judul", dataItemPengumuman.getJudul());
+        args.putInt("id_bank", dataItemBank.getId());
+        args.putString("nama_bank", dataItemBank.getNamaBank());
+        args.putString("atas_nama", dataItemBank.getAtasNama());
         myFragment.setArguments(args);
 
         return myFragment;
@@ -79,7 +79,9 @@ public class DialogBankFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_bank, container, false);
         unbinder = ButterKnife.bind(this, view);
         if (getArguments() != null) {
-            id_pengumuman = getArguments().getInt("id_pengumuman");
+            id_bank = getArguments().getInt("id_bank");
+            etNama.setText(getArguments().getString("nama_bank"));
+            etAtasNama.setText(getArguments().getString("atas_nama"));
         }
         return view;
     }
@@ -108,7 +110,7 @@ public class DialogBankFragment extends DialogFragment {
 
     private void uploadPengumuman() {
         openDialog();
-        AndroidNetworking.post(WEB_URL + "api/master/bank")
+        AndroidNetworking.post(WEB_URL + "api/backend/master/bank")
                 .addBodyParameter(getPengumumanToUpload())
                 .build()
                 .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {
@@ -131,8 +133,8 @@ public class DialogBankFragment extends DialogFragment {
 
     private void editPengumuman() {
         openDialog();
-        AndroidNetworking.put(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
-                .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
+        AndroidNetworking.put(WEB_URL + "api/backend/master/bank/{id_bank}")
+                .addPathParameter("id_bank", String.valueOf(id_bank))
                 .addBodyParameter(getPengumumanToUpload())
                 .build()
                 .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {

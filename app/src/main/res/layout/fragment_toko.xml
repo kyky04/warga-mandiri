@@ -70,7 +70,9 @@
                             android:id="@+id/et_deskripsi_toko"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Deskripsi Toko" />
+                            android:gravity="top"
+                            android:hint="Deskripsi Toko"
+                            android:lines="10" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -82,6 +84,7 @@
                             android:id="@+id/et_alamat_toko"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="top"
                             android:gravity="top"
                             android:hint="Alamat Toko"
                             android:lines="2" />
@@ -142,6 +145,16 @@
 
                     </android.support.design.widget.TextInputLayout>
 
+                    <Button
+                        android:id="@+id/btn_update"
+                        style="?android:attr/borderlessButtonStyle"
+                        fontPath="fonts/open_sans.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_small"
+                        android:background="@color/teal_A700"
+                        android:text="UPDATE"
+                        android:textColor="@color/white" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

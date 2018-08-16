@@ -1,92 +1,168 @@
 package co.id.wargamandiri.models;
 
-import com.google.gson.annotations.SerializedName;
-
 public class TokoResponse{
-
-	@SerializedName("provinsi")
-	private int provinsi;
-
-	@SerializedName("kota")
-	private int kota;
-
-	@SerializedName("line")
-	private String line;
-
-	@SerializedName("created_at")
-	private Object createdAt;
-
-	@SerializedName("wa")
-	private String wa;
-
-	@SerializedName("bbm")
-	private String bbm;
-
-	@SerializedName("created_by")
-	private Object createdBy;
-
-	@SerializedName("alamat")
-	private String alamat;
-
-	@SerializedName("nama")
-	private String nama;
-
-	@SerializedName("updated_at")
+	private String whatsapp;
+	private Object namaProvinsi;
+	private Object latitude;
+	private String createdAt;
+	private Object idKota;
+	private String instagram;
+	private Object idProvinsi;
+	private String twitter;
 	private String updatedAt;
-
-	@SerializedName("phone")
-	private String phone;
-
-	@SerializedName("updated_by")
-	private int updatedBy;
-
-	@SerializedName("id")
+	private boolean pos;
 	private int id;
-
-	@SerializedName("deskripsi")
+	private String email;
+	private Object longitude;
+	private boolean jne;
+	private boolean tiki;
+	private String facebook;
+	private String kodePos;
+	private String bbm;
+	private Object createdBy;
+	private String alamat;
+	private String biayaCod;
+	private String nama;
+	private String nomor_telepon;
+	private Object updatedBy;
+	private boolean cod;
 	private String deskripsi;
+	private Object namaKota;
 
-	@SerializedName("fb")
-	private String fb;
-
-	public void setProvinsi(int provinsi){
-		this.provinsi = provinsi;
+	public void setWhatsapp(String whatsapp){
+		this.whatsapp = whatsapp;
 	}
 
-	public int getProvinsi(){
-		return provinsi;
+	public String getWhatsapp(){
+		return whatsapp;
 	}
 
-	public void setKota(int kota){
-		this.kota = kota;
+	public void setNamaProvinsi(Object namaProvinsi){
+		this.namaProvinsi = namaProvinsi;
 	}
 
-	public int getKota(){
-		return kota;
+	public Object getNamaProvinsi(){
+		return namaProvinsi;
 	}
 
-	public void setLine(String line){
-		this.line = line;
+	public void setLatitude(Object latitude){
+		this.latitude = latitude;
 	}
 
-	public String getLine(){
-		return line;
+	public Object getLatitude(){
+		return latitude;
 	}
 
-	public void setCreatedAt(Object createdAt){
+	public void setCreatedAt(String createdAt){
 		this.createdAt = createdAt;
 	}
 
-	public Object getCreatedAt(){
+	public String getCreatedAt(){
 		return createdAt;
 	}
 
-	public void setWa(String wa){
-		this.wa = wa;
+	public void setIdKota(Object idKota){
+		this.idKota = idKota;
 	}
 
-	public String getWa(){
-		return wa;
+	public Object getIdKota(){
+		return idKota;
+	}
+
+	public void setInstagram(String instagram){
+		this.instagram = instagram;
+	}
+
+	public String getInstagram(){
+		return instagram;
+	}
+
+	public void setIdProvinsi(Object idProvinsi){
+		this.idProvinsi = idProvinsi;
+	}
+
+	public Object getIdProvinsi(){
+		return idProvinsi;
+	}
+
+	public void setTwitter(String twitter){
+		this.twitter = twitter;
+	}
+
+	public String getTwitter(){
+		return twitter;
+	}
+
+	public void setUpdatedAt(String updatedAt){
+		this.updatedAt = updatedAt;
+	}
+
+	public String getUpdatedAt(){
+		return updatedAt;
+	}
+
+	public void setPos(boolean pos){
+		this.pos = pos;
+	}
+
+	public boolean isPos(){
+		return pos;
+	}
+
+	public void setId(int id){
+		this.id = id;
+	}
+
+	public int getId(){
+		return id;
+	}
+
+	public void setEmail(String email){
+		this.email = email;
+	}
+
+	public String getEmail(){
+		return email;
+	}
+
+	public void setLongitude(Object longitude){
+		this.longitude = longitude;
+	}
+
+	public Object getLongitude(){
+		return longitude;
+	}
+
+	public void setJne(boolean jne){
+		this.jne = jne;
+	}
+
+	public boolean isJne(){
+		return jne;
+	}
+
+	public void setTiki(boolean tiki){
+		this.tiki = tiki;
+	}
+
+	public boolean isTiki(){
+		return tiki;
+	}
+
+	public void setFacebook(String facebook){
+		this.facebook = facebook;
+	}
+
+	public String getFacebook(){
+		return facebook;
+	}
+
+	public void setKodePos(String kodePos){
+		this.kodePos = kodePos;
+	}
+
+	public String getKodePos(){
+		return kodePos;
 	}
 
 	public void setBbm(String bbm){
@@ -113,6 +189,14 @@ public class TokoResponse{
 		return alamat;
 	}
 
+	public void setBiayaCod(String biayaCod){
+		this.biayaCod = biayaCod;
+	}
+
+	public String getBiayaCod(){
+		return biayaCod;
+	}
+
 	public void setNama(String nama){
 		this.nama = nama;
 	}
@@ -121,36 +205,28 @@ public class TokoResponse{
 		return nama;
 	}
 
-	public void setUpdatedAt(String updatedAt){
-		this.updatedAt = updatedAt;
+	public void setNomor_telepon(String nomor_telepon){
+		this.nomor_telepon = nomor_telepon;
 	}
 
-	public String getUpdatedAt(){
-		return updatedAt;
+	public String getNomor_telepon(){
+		return nomor_telepon;
 	}
 
-	public void setPhone(String phone){
-		this.phone = phone;
-	}
-
-	public String getPhone(){
-		return phone;
-	}
-
-	public void setUpdatedBy(int updatedBy){
+	public void setUpdatedBy(Object updatedBy){
 		this.updatedBy = updatedBy;
 	}
 
-	public int getUpdatedBy(){
+	public Object getUpdatedBy(){
 		return updatedBy;
 	}
 
-	public void setId(int id){
-		this.id = id;
+	public void setCod(boolean cod){
+		this.cod = cod;
 	}
 
-	public int getId(){
-		return id;
+	public boolean isCod(){
+		return cod;
 	}
 
 	public void setDeskripsi(String deskripsi){
@@ -161,33 +237,45 @@ public class TokoResponse{
 		return deskripsi;
 	}
 
-	public void setFb(String fb){
-		this.fb = fb;
+	public void setNamaKota(Object namaKota){
+		this.namaKota = namaKota;
 	}
 
-	public String getFb(){
-		return fb;
+	public Object getNamaKota(){
+		return namaKota;
 	}
 
 	@Override
  	public String toString(){
 		return 
 			"TokoResponse{" + 
-			"provinsi = '" + provinsi + '\'' + 
-			",kota = '" + kota + '\'' + 
-			",line = '" + line + '\'' + 
+			"whatsapp = '" + whatsapp + '\'' + 
+			",nama_provinsi = '" + namaProvinsi + '\'' + 
+			",latitude = '" + latitude + '\'' + 
 			",created_at = '" + createdAt + '\'' + 
-			",wa = '" + wa + '\'' + 
+			",id_kota = '" + idKota + '\'' + 
+			",instagram = '" + instagram + '\'' + 
+			",id_provinsi = '" + idProvinsi + '\'' + 
+			",twitter = '" + twitter + '\'' + 
+			",updated_at = '" + updatedAt + '\'' + 
+			",pos = '" + pos + '\'' + 
+			",id = '" + id + '\'' + 
+			",email = '" + email + '\'' + 
+			",longitude = '" + longitude + '\'' + 
+			",jne = '" + jne + '\'' + 
+			",tiki = '" + tiki + '\'' + 
+			",facebook = '" + facebook + '\'' + 
+			",kode_pos = '" + kodePos + '\'' + 
 			",bbm = '" + bbm + '\'' + 
 			",created_by = '" + createdBy + '\'' + 
 			",alamat = '" + alamat + '\'' + 
+			",biaya_cod = '" + biayaCod + '\'' + 
 			",nama = '" + nama + '\'' + 
-			",updated_at = '" + updatedAt + '\'' + 
-			",phone = '" + phone + '\'' + 
+			",nomor_telepon = '" + nomor_telepon + '\'' +
 			",updated_by = '" + updatedBy + '\'' + 
-			",id = '" + id + '\'' + 
+			",cod = '" + cod + '\'' + 
 			",deskripsi = '" + deskripsi + '\'' + 
-			",fb = '" + fb + '\'' + 
+			",nama_kota = '" + namaKota + '\'' + 
 			"}";
 		}
 }

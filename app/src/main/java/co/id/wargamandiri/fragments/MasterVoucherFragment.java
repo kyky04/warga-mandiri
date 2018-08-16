@@ -109,7 +109,7 @@ public class MasterVoucherFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/master/voucher")
+        AndroidNetworking.get(WEB_URL + "api/backend/master/voucher")
                 .build()
                 .getAsObject(VoucherResponse.class, new ParsedRequestListener() {
                     @Override

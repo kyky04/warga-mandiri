@@ -30,7 +30,6 @@ import static co.id.wargamandiri.services.FastConstans.LOGIN;
 
 public class LoginActivity extends AppCompatActivity {
 
-
     Session session;
     ProgressDialog progressDialog;
     @BindView(R.id.img_logo)
@@ -76,7 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                 closeDialog();
                 if (response instanceof LoginResponse) {
                     if (((LoginResponse) response).isStatus()) {
-                        session.set
+                        session.createUser(((LoginResponse) response));
+                        startActivity(new Intent(LoginActivity.this, MenuActivity.class));
                     }
                 }
             }
@@ -99,12 +99,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     @OnClick({R.id.btn_signin, R.id.tv_register})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_signin:
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                login();
                 break;
             case R.id.tv_register:
                 startActivity(new Intent(LoginActivity.this, DaftarActivity.class));

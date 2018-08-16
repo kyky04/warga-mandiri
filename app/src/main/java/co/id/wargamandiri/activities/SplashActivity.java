@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.utils.Session;
@@ -13,6 +14,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class SplashActivity extends AppCompatActivity {
     private static final int TIME = 3000;
     Session session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (session.isLoggedIn()) {
-                    Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                    Intent i = new Intent(SplashActivity.this, MenuActivity.class);
                     // Closing all the Activities
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -33,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
                     // Staring Login Activity
                     startActivity(i);
                     finish();
-                }else {
+                } else {
                     Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                     // Closing all the Activities
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -46,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
                     finish();
                 }
             }
-        },TIME);
+        }, TIME);
 
     }
 

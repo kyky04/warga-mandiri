@@ -10,5 +10,6 @@ public class FastConstans {
         public static final String KATEGORI = WEB_URL_API + "backend/master/kategori";
         public static final String SLIDER = WEB_URL_API + "backend/master/slider";
         public static final String LOGIN = WEB_URL_API + "login";
+        public static final String DAFTAR_TOKO = WEB_URL_API + "register/toko";
 
 }
