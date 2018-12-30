@@ -2,13 +2,11 @@ package co.id.wargamandiri.fragments;
 
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,14 +21,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import org.json.JSONObject;
 
@@ -41,13 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterBanner;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.SliderAdapter;
 import co.id.wargamandiri.models.BannerResponse;
 import co.id.wargamandiri.models.DataItemBanner;
 import co.id.wargamandiri.utils.Session;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.SLIDER;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,15 +46,15 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class KelolaBannerFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
     @BindView(R.id.fab_add_banner)
     FloatingActionButton fabAddBanner;
     Unbinder unbinder;
 
-    AdapterBanner adapterBanner;
+    SliderAdapter adapter;
 
     Session session;
 
@@ -79,29 +70,37 @@ public class KelolaBannerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kelola_data_toko, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterBanner(getActivity());
-        getBanner();
-        rvBanner.setAdapter(adapterBanner);
+        session = new Session(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new SliderAdapter(getActivity());
+        getData();
+        recyclerView.setAdapter(adapter);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getBanner();
+                getData();
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterBanner.OnItemClick() {
+        adapter.setOnItemClick(new SliderAdapter.OnItemClick() {
             @Override
-            public void onItemEditClick(int pos, DataItemBanner dataItemBanner) {
+            public void onItemClick(int pos) {
 
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemBanner dataItemBanner) {
-                    deleteBanner(dataItemBanner.getId());
+            public void onEditClick(int pos) {
+                edit(adapter.getItem(pos));
             }
+
+            @Override
+            public void onDeleteClick(int pos) {
+                delete(adapter.getItem(pos).getId());
+
+            }
+
         });
+        fabAddBanner.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -113,20 +112,25 @@ public class KelolaBannerFragment extends Fragment {
 
     @OnClick(R.id.fab_add_banner)
     public void onViewClicked() {
-        showDialogFullscreen();
+        upload();
     }
 
-    private void getBanner() {
+    private void getData() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/master/slider")
+        AndroidNetworking.get(SLIDER)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
                 .build()
                 .getAsObject(BannerResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
                         if (response instanceof BannerResponse) {
-                            Log.d("RESPONSE", ((BannerResponse) response).getData().get(1).getGambar());
-                            adapterBanner.swap(((BannerResponse) response).getData());
+                            if(((BannerResponse) response).getData().size() > 0){
+                                adapter.swap(((BannerResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            }else {
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
                         }
                     }
 
@@ -148,62 +152,45 @@ public class KelolaBannerFragment extends Fragment {
         }
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getContext(), WRITE_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
 
-    private void requestPermission() {
-        Dexter.withActivity(getActivity())
-                .withPermission(WRITE_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
 
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                }).check();
-    }
-
-    private void addImage() {
-        ImagePicker.create(this)
-                .returnMode(ReturnMode.ALL) // set whether pick and / or camera action should return immediate result or not.// image selection title
-                .single()// Toolbar 'up' arrow color
-                .start();
-    }
-
-    private void showDialogFullscreen() {
+    private void upload() {
         FragmentManager fragmentManager = getFragmentManager();
-        DialogBannerFragment newFragment = new DialogBannerFragment();
+        DialogSliderFragment newFragment = new DialogSliderFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
-        newFragment.setOnCallbackResult(new DialogBannerFragment.CallbackResult() {
+        newFragment.setOnCallbackResult(new DialogSliderFragment.CallbackResult() {
             @Override
-            public void sendResult( Object obj) {
-                getBanner();
+            public void sendResult() {
+                getData();
             }
         });
     }
 
-    private void deleteBanner(int id_banner){
-        AndroidNetworking.delete(WEB_URL + "api/master/banner-toko/{id_banner}")
+    private void edit(DataItemBanner banner) {
+        FragmentManager fragmentManager = getFragmentManager();
+        DialogSliderFragment newFragment = DialogSliderFragment.newInstance(banner);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
+        newFragment.setOnCallbackResult(new DialogSliderFragment.CallbackResult() {
+            @Override
+            public void sendResult() {
+                getData();
+            }
+        });
+    }
+
+    private void delete(int id_banner){
+        AndroidNetworking.delete(SLIDER + "/{id_banner}")
                 .addPathParameter("id_banner", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "DataItemPengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-                        getBanner();
+                        Toast.makeText(getActivity(), "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                        getData();
                     }
 
                     @Override

@@ -1,0 +1,134 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="center_horizontal|top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large">
+
+
+        <EditText
+            android:id="@+id/template_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama Toko"
+            android:singleLine="true"
+            android:textSize="@dimen/headline_leading"
+             />
+
+
+        <EditText
+            android:id="@+id/author_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Moto Toko"
+            android:inputType="textPersonName"
+             />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:id="@+id/warna_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Warna Aplikasi"
+                android:inputType="textPersonName"
+                 />
+
+            <RelativeLayout
+                android:id="@+id/bg"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@color/green_50"
+                android:padding="@dimen/spacing_medium">
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textStyle="italic"
+            android:text="Icon Toko tidak lebih dari 200px dan 200kb"
+            android:textColor="@color/colorAccent" />
+
+        <ImageView
+            android:id="@+id/img_phone"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:src="@drawable/logo" />
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/template_editor_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_gravity="center_vertical"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        android:paddingBottom="@dimen/cardview_padding_last_bottom"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/template_editor_listview"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <!--<view-->
+        <!--android:id="@+id/empty_view_text"-->
+        <!--style="@style/TextView.Empty"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="@dimen/padding_small"-->
+        <!--android:text="Click Add" />-->
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_add_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/floating_action_button_padding_bottom_right"
+        android:layout_marginRight="@dimen/floating_action_button_padding_bottom_right"
+        android:layout_marginBottom="@dimen/floating_action_button_padding_bottom_right"
+        android:src="@drawable/ic_add"
+        fab:fabSize="normal" />
+</RelativeLayout>

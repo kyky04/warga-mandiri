@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,8 @@ import android.widget.TextView;
 import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
-import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +26,7 @@ import co.id.wargamandiri.utils.CommonUtil;
 import co.id.wargamandiri.utils.Session;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import static co.id.wargamandiri.services.FastConstans.LOGIN;
+import static co.id.wargamandiri.data.Constans.LOGIN;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,15 +38,16 @@ public class LoginActivity extends AppCompatActivity {
     EditText etUsername;
     @BindView(R.id.et_password)
     EditText etPassword;
-    @BindView(R.id.card)
-    CardView card;
     @BindView(R.id.btn_signin)
     Button btnSignin;
     @BindView(R.id.blm_pnya_akun)
     TextView blmPnyaAkun;
     @BindView(R.id.tv_register)
     TextView tvRegister;
+    @BindView(R.id.tv_reset_pass)
+    TextView tvResetPass;
 
+    ArrayList<View> etView = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
 
         session = new Session(this);
 
+        etView.add(etUsername);
+        etView.add(etPassword);
 
     }
 
@@ -77,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (((LoginResponse) response).isStatus()) {
                         session.createUser(((LoginResponse) response));
                         startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                    } else {
+                        CommonUtil.showToast(LoginActivity.this, "Email atau Password tidak sesuai");
                     }
                 }
             }
@@ -84,9 +89,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(ANError anError) {
                 closeDialog();
+                CommonUtil.showToast(LoginActivity.this, "Please check your server");
             }
         });
     }
+
 
     void openDialog() {
         progressDialog = ProgressDialog.show(this, "Harap tunggu", "Prosess .  . .");
@@ -103,11 +110,21 @@ public class LoginActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_signin:
-                login();
+                if (!CommonUtil.validateEmptyEntries(etView)) {
+                    login();
+                } else {
+                    CommonUtil.showToast(LoginActivity.this, "Harap isi semua bidang");
+                }
                 break;
             case R.id.tv_register:
                 startActivity(new Intent(LoginActivity.this, DaftarActivity.class));
                 break;
         }
+    }
+
+    @OnClick(R.id.tv_reset_pass)
+    public void onViewClicked() {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        startActivity(intent);
     }
 }

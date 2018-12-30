@@ -3,7 +3,6 @@ package co.id.wargamandiri.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -26,36 +25,40 @@ import com.esafirm.imagepicker.model.Image;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterMember;
-import co.id.wargamandiri.adapter.AdapterUser;
+import co.id.wargamandiri.activities.ChatActivity;
+import co.id.wargamandiri.activities.KelolaActivity;
+import co.id.wargamandiri.activities.MenuActivity;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.MemberAdapter;
 import co.id.wargamandiri.models.DataItemMember;
 import co.id.wargamandiri.models.MemberResponse;
+import co.id.wargamandiri.models.UploadMemberResponse;
 import co.id.wargamandiri.models.UserResponse;
+import co.id.wargamandiri.utils.CommonUtil;
 import co.id.wargamandiri.utils.Session;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.MEMBER;
+import static co.id.wargamandiri.data.Constans.MEMBER_STATUS;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class KelolaDataMemberFragment extends Fragment {
+    private static final String TAG = "KelolaDataMemberFragmen";
 
-
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
 
     Unbinder unbinder;
 
-    AdapterMember adapterBanner;
+    MemberAdapter adapter;
 
     Session session;
 
@@ -65,33 +68,48 @@ public class KelolaDataMemberFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_kelola_data_member, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterMember(getActivity());
-        getAllMember(1);
-        rvBanner.setAdapter(adapterBanner);
+        session = new Session(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new MemberAdapter(getActivity());
+        getAllMember();
+        recyclerView.setAdapter(adapter);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getAllMember(1);
+                getAllMember();
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterMember.OnItemClick() {
+        adapter.setOnItemClick(new MemberAdapter.OnItemClick() {
+
             @Override
-            public void onItemEditClick(int pos, DataItemMember dataItemBanner) {
-//                showEditDialogFullscreen(dataItemBanner);
+            public void onChat(int pos) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("pengirim", adapter.getItem(pos).getId());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemMember dataItemBanner) {
-                deleteBanner(dataItemBanner.getId());
+            public void onInfo(int pos) {
+
+            }
+
+            @Override
+            public void onSwicth(int pos, boolean checked) {
+                Log.d(TAG, "onSwicth: " + checked);
+                if (checked) {
+                    aktivasiMember(adapter.getItem(pos), 1);
+                } else {
+                    aktivasiMember(adapter.getItem(pos), 0);
+                }
             }
         });
 
@@ -105,19 +123,24 @@ public class KelolaDataMemberFragment extends Fragment {
     }
 
 
-    private void getAllMember(int id_toko) {
+    private void getAllMember() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/member")
-                .addPathParameter("id_toko", String.valueOf(id_toko))
+        AndroidNetworking.get(MEMBER)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
+                .addQueryParameter("admin", String.valueOf(false))
                 .build()
                 .getAsObject(MemberResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
-                        if (response instanceof MemberResponse){
-                            adapterBanner.swap(((MemberResponse) response).getData());
+                        if (response instanceof MemberResponse) {
+                            if (((MemberResponse) response).getData().size() > 0) {
+                                adapter.swap(((MemberResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            } else {
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
                         }
-//                        adapterBanner.swap(response);
                     }
 
                     @Override
@@ -125,19 +148,31 @@ public class KelolaDataMemberFragment extends Fragment {
 
                     }
                 });
-//                .getAsObjectList(MemberResponse.class, new ParsedRequestListener<List<MemberResponse>>() {
-//                    @Override
-//                    public void onResponse(List<UserResponse> response) {
-//                        refresh.setRefreshing(false);
-//                        adapterBanner.swap(response);
-//                    }
-//
-//                    @Override
-//                    public void onError(ANError anError) {
-//                        Log.d("ERROR RESPONSE", anError.getErrorDetail());
-//                        refresh.setRefreshing(false);
-//                    }
-//                });
+    }
+
+    private void aktivasiMember(final DataItemMember member, final int status) {
+        AndroidNetworking.put(MEMBER_STATUS + "/{id}")
+                .addPathParameter("id", String.valueOf(member.getId()))
+                .addBodyParameter("status", String.valueOf(status))
+                .build()
+                .getAsObject(UploadMemberResponse.class, new ParsedRequestListener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        if (response instanceof UploadMemberResponse) {
+                            if (status == 0) {
+                                CommonUtil.showToast(getActivity(), "User dengan nama " + member.getName() + " dinonaktifkan");
+                            } else {
+                                CommonUtil.showToast(getActivity(), "User dengan nama " + member.getName() + " diaktifkan");
+                            }
+                            getAllMember();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                    }
+                });
     }
 
     @Override
@@ -158,8 +193,8 @@ public class KelolaDataMemberFragment extends Fragment {
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogPengumumanFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
-                getAllMember(1);
+            public void sendResult() {
+                getAllMember();
             }
         });
     }
@@ -173,20 +208,20 @@ public class KelolaDataMemberFragment extends Fragment {
         newFragment.setOnCallbackResult(new DialogMemberFragment.CallbackResult() {
             @Override
             public void sendResult(Object obj) {
-                getAllMember(1);
+                getAllMember();
             }
         });
     }
 
-    private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
-                .addPathParameter("id_pengumuman", String.valueOf(id_banner))
+    private void delete(int id) {
+        AndroidNetworking.delete(MEMBER + "{id_pengumuman}")
+                .addPathParameter("id_pengumuman", String.valueOf(id))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "DataItemPengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-                        getAllMember(1);
+                        Toast.makeText(getActivity(), "Pengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                        getAllMember();
                     }
 
                     @Override

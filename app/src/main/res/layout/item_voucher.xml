@@ -33,6 +33,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:layout_marginTop="@dimen/spacing_medium"
                     android:id="@+id/tv_tanggal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,6 +65,7 @@
                 android:padding="@dimen/spacing_medium">
 
                 <ImageButton
+                    android:visibility="gone"
                     android:id="@+id/btn_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/spacing_xlarge"

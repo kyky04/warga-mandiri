@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.buildmlearn.toolkit.activity.TemplateEditor">
+
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="2"
+        android:title="@string/menu_save_template"
+        app:showAsAction="never" />
+
+    <item
+        android:visible="false"
+        android:id="@+id/action_simulate"
+        android:orderInCategory="1"
+        android:title="@string/menu_simulate"
+        app:showAsAction="never" />
+</menu>

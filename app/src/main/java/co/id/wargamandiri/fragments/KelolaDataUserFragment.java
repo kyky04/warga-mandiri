@@ -20,7 +20,7 @@ import butterknife.Unbinder;
 import co.id.wargamandiri.R;
 import co.id.wargamandiri.models.UserResponse;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.

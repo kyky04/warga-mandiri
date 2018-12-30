@@ -32,13 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterVoucher;
-import co.id.wargamandiri.models.DataItemPengumuman;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.VoucherAdapter;
 import co.id.wargamandiri.models.DataItemVoucher;
 import co.id.wargamandiri.models.VoucherResponse;
 import co.id.wargamandiri.utils.Session;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.VOUCHER;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,15 +46,15 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class MasterVoucherFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
     @BindView(R.id.fab_add_banner)
     FloatingActionButton fabAddBanner;
     Unbinder unbinder;
 
-    AdapterVoucher adapterBanner;
+    VoucherAdapter adapter;
 
     Session session;
 
@@ -70,11 +70,11 @@ public class MasterVoucherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kelola, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterVoucher(getActivity());
+        session = new Session(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new VoucherAdapter(getActivity());
         getPengumuman();
-        rvBanner.setAdapter(adapterBanner);
+        recyclerView.setAdapter(adapter);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -82,15 +82,15 @@ public class MasterVoucherFragment extends Fragment {
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterVoucher.OnItemClick() {
+        adapter.setOnItemClick(new VoucherAdapter.OnItemClick() {
             @Override
             public void onItemEditClick(int pos, DataItemVoucher dataItemBanner) {
 //                showEditDialogFullscreen(dataItemBanner);
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemVoucher dataItemBanner) {
-                deleteBanner(dataItemBanner.getId());
+            public void onItemDeleteClick(int pos, DataItemVoucher item) {
+                delete(adapter.getItem(pos).getId());
             }
         });
         return view;
@@ -109,15 +109,22 @@ public class MasterVoucherFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/master/voucher")
+        AndroidNetworking.get(VOUCHER)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
                 .build()
                 .getAsObject(VoucherResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
                         if (response instanceof VoucherResponse) {
-                            adapterBanner.swap(((VoucherResponse) response).getData());
+                            if(((VoucherResponse) response).getData().size() > 0){
+                                adapter.swap(((VoucherResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            }else {
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
                         }
+
                     }
 
                     @Override
@@ -147,29 +154,16 @@ public class MasterVoucherFragment extends Fragment {
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogVoucherFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
+            public void sendResult() {
                 getPengumuman();
             }
         });
     }
 
-    private void showEditDialogFullscreen(DataItemPengumuman itemPengumuman) {
-        FragmentManager fragmentManager = getFragmentManager();
-        DialogPengumumanFragment newFragment = DialogPengumumanFragment.newInstance(itemPengumuman);
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
-        newFragment.setOnCallbackResult(new DialogPengumumanFragment.CallbackResult() {
-            @Override
-            public void sendResult(Object obj) {
-                getPengumuman();
-            }
-        });
-    }
 
-    private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(WEB_URL + "api/master/voucher/{id_voucher}")
-                .addPathParameter("id_voucher", String.valueOf(id_banner))
+    private void delete(int id) {
+        AndroidNetworking.delete(VOUCHER + "{id_voucher}")
+                .addPathParameter("id_voucher", String.valueOf(id))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override

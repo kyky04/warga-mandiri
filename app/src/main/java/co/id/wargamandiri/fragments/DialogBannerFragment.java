@@ -48,7 +48,7 @@ import co.id.wargamandiri.models.DataItemBanner;
 import co.id.wargamandiri.models.UploadBannerResponse;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,8 +64,6 @@ public class DialogBannerFragment extends DialogFragment {
     ImageView imageBg;
     @BindView(R.id.title)
     TextView title;
-    @BindView(R.id.brief)
-    Button brief;
     @BindView(R.id.lyt_parent)
     LinearLayout lytParent;
     @BindView(R.id.btn_upload)
@@ -130,11 +128,7 @@ public class DialogBannerFragment extends DialogFragment {
                 uploadBanner();
                 break;
             case R.id.btn_upload:
-                if(checkPermission()){
-                    addImage();
-                }else {
-                    requestPermission();
-                }
+
                 break;
         }
     }
@@ -153,31 +147,6 @@ public class DialogBannerFragment extends DialogFragment {
         void sendResult(Object obj);
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getContext(), WRITE_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        Dexter.withActivity(getActivity())
-                .withPermission(WRITE_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                }).check();
-    }
 
     private void addImage() {
         ImagePicker.create(this)
@@ -190,7 +159,7 @@ public class DialogBannerFragment extends DialogFragment {
         openDialog();
         AndroidNetworking.upload(WEB_URL + "api/master/banner-toko")
                 .addMultipartParameter("id_toko", String.valueOf(1))
-                .addMultipartFile("gambar[]",file)
+                .addMultipartFile("gambar",file)
                 .addMultipartParameter("keterangan",etDeskripsi.getText().toString())
                 .build()
                 .setUploadProgressListener(new UploadProgressListener() {
@@ -227,11 +196,5 @@ public class DialogBannerFragment extends DialogFragment {
         progressDialog.dismiss();
     }
 
-    public DataItemBanner getBannerToUpload(){
-        DataItemBanner dataItemBanner = new DataItemBanner();
-        dataItemBanner.setIdToko(1);
-        dataItemBanner.setGambar(path);
-        dataItemBanner.setKeterangan(etDeskripsi.getText().toString());
-        return dataItemBanner;
-    }
+
 }

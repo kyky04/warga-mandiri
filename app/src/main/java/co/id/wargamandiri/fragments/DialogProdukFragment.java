@@ -2,17 +2,15 @@ package co.id.wargamandiri.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +18,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
+import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,52 +41,70 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterUploadGambar;
-import co.id.wargamandiri.models.DataItemPengumuman;
-import co.id.wargamandiri.models.UploadGambar;
+import co.id.wargamandiri.models.DataItemKategori;
+import co.id.wargamandiri.models.DataItemProduk;
+import co.id.wargamandiri.models.KategoriResponse;
+import co.id.wargamandiri.models.UploadKategoriResponse;
 import co.id.wargamandiri.models.UploadProdukResponse;
+import co.id.wargamandiri.utils.CommonUtil;
+import co.id.wargamandiri.utils.Session;
+import co.id.wargamandiri.utils.Tools;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.KATEGORI;
+import static co.id.wargamandiri.data.Constans.PRODUK;
+import static co.id.wargamandiri.data.Constans.WEB_URL_STORAGE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DialogProdukFragment extends DialogFragment {
+    public static final String ARG_DATA = "DATA";
+    private static final String TAG = "DialogProdukFragment";
 
 
     Unbinder unbinder;
-
     public CallbackResult callbackResult;
-
-
-    NestedScrollView nestedScrollView;
     @BindView(R.id.bt_close)
     ImageButton btClose;
     @BindView(R.id.bt_save)
     Button btSave;
-    @BindView(R.id.et_nama)
-    EditText etNama;
-    @BindView(R.id.et_harga)
-    EditText etHarga;
-    @BindView(R.id.et_harga_diskon)
-    EditText etHargaDiskon;
+    @BindView(R.id.image_bg)
+    ImageView imageBg;
+    @BindView(R.id.more)
+    ImageButton more;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.lay_item_click)
+    LinearLayout layItemClick;
+    @BindView(R.id.btn_upload)
+    Button btnUpload;
+    @BindView(R.id.et_judul)
+    EditText etJudul;
     @BindView(R.id.et_deskripsi)
     EditText etDeskripsi;
+    @BindView(R.id.et_harga)
+    EditText etHarga;
     @BindView(R.id.et_stok)
     EditText etStok;
-    @BindView(R.id.rv_upload)
-    RecyclerView rvUpload;
-    @BindView(R.id.add_image)
-    Button addImage;
-
+    @BindView(R.id.et_kategori)
+    EditText etKategori;
+    @BindView(R.id.card)
+    CardView card;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
     private ProgressDialog progressDialog;
     private String path;
-    private File file;
-    private int id_pengumuman;
+    File file;
+    DataItemProduk item;
 
-    AdapterUploadGambar adapterUploadGambar;
-    private List<String> filePathsFoto = new ArrayList<>();
+    Session session;
+    boolean edit = false;
+
+
+    List<DataItemKategori> itemKategoriList = new ArrayList<>();
+    List<String> stringArrayList = new ArrayList<>();
+    private int pos, id_kategori = 0;
+    ;
 
     public void setOnCallbackResult(final CallbackResult callbackResult) {
         this.callbackResult = callbackResult;
@@ -99,16 +114,13 @@ public class DialogProdukFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static DialogProdukFragment newInstance(DataItemPengumuman dataItemPengumuman) {
-        DialogProdukFragment myFragment = new DialogProdukFragment();
+    public static DialogProdukFragment newInstance(DataItemProduk item) {
 
         Bundle args = new Bundle();
-        args.putInt("id_pengumuman", dataItemPengumuman.getId());
-        args.putString("isi", dataItemPengumuman.getIsi());
-        args.putString("judul", dataItemPengumuman.getJudul());
-        myFragment.setArguments(args);
-
-        return myFragment;
+        args.putSerializable(ARG_DATA, item);
+        DialogProdukFragment fragment = new DialogProdukFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -117,27 +129,27 @@ public class DialogProdukFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_produk, container, false);
         unbinder = ButterKnife.bind(this, view);
-        adapterUploadGambar = new AdapterUploadGambar(getActivity());
 
-        adapterUploadGambar.setOnItemClickListener(new AdapterUploadGambar.OnItemClickListener() {
+        session = new Session(getActivity());
+
+        isEdit();
+
+        etJudul.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onDeleteClick(int position) {
-                adapterUploadGambar.removeItem(position);
-                filePathsFoto.remove(position);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onItemClick(int position) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                title.setText(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
-        rvUpload.setAdapter(adapterUploadGambar);
-        rvUpload.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        if (getArguments() != null) {
-//           etIsi.setText(getArguments().getString("isi"));
-            id_pengumuman = getArguments().getInt("id_pengumuman");
-        }
         return view;
     }
 
@@ -147,18 +159,24 @@ public class DialogProdukFragment extends DialogFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.bt_close, R.id.bt_save})
+    @OnClick({R.id.bt_close, R.id.bt_save, R.id.btn_upload, R.id.et_kategori})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_close:
                 dismiss();
                 break;
-            case R.id.bt_save:
-                if (getArguments() != null) {
-//                    editPengumuman();
+            case R.id.et_kategori:
+                if (stringArrayList.size() == 0) {
+                    getKategori();
                 } else {
-                    uploadPengumuman();
+                    kategoriDialog();
                 }
+                break;
+            case R.id.bt_save:
+                uploadData();
+                break;
+            case R.id.btn_upload:
+                addImage();
                 break;
         }
     }
@@ -168,39 +186,31 @@ public class DialogProdukFragment extends DialogFragment {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
             file = new File(image.getPath());
-            filePathsFoto.add(image.getPath());
-            if (file.exists()) {
-                Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                adapterUploadGambar.add(new UploadGambar(myBitmap, image.getPath()));
-            }
+            path = image.getPath();
+            Glide.with(getActivity()).load(file).into(imageBg);
         }
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getContext(), WRITE_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
+    private boolean isEdit() {
+        if (getArguments() != null) {
+            edit = true;
+            item = (DataItemProduk) getArguments().getSerializable(ARG_DATA);
+            etJudul.setText(item.getNama());
+            etDeskripsi.setText(item.getDeskripsi());
+            etStok.setText(item.getStok() + "");
+            etHarga.setText(item.getHarga() + "");
+            etKategori.setText(item.getKategori().getNama());
+
+            Glide.with(getActivity()).load(WEB_URL_STORAGE + item.getGambarUtama()).into(imageBg);
+            return true;
+        }
+        return false;
     }
 
-    private void requestPermission() {
-        Dexter.withActivity(getActivity())
-                .withPermission(WRITE_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                }).check();
+    public interface CallbackResult {
+        void sendResult();
     }
+
 
     private void addImage() {
         ImagePicker.create(this)
@@ -209,22 +219,27 @@ public class DialogProdukFragment extends DialogFragment {
                 .start();
     }
 
-    private void uploadPengumuman() {
-        ANRequest.MultiPartBuilder builder = new ANRequest.MultiPartBuilder(WEB_URL + "api/backend/produk");
-        for (int i = 0; i < filePathsFoto.size(); i++) {
-            File file = new File(filePathsFoto.get(i));
-            builder.addMultipartFile("gambar[]", file);
-        }
+    private void uploadData() {
         openDialog();
-        builder.addMultipartParameter("id_toko", String.valueOf(1))
-                .addMultipartParameter("nama", etNama.getText().toString())
-                .addMultipartParameter("harga", etHarga.getText().toString())
-                .addMultipartParameter("harga_diskon", etHargaDiskon.getText().toString())
+        ANRequest.MultiPartBuilder upload;
+        if (edit) {
+            upload = new ANRequest.MultiPartBuilder(PRODUK + "/{id}");
+            upload.addPathParameter("id", String.valueOf(item.getId()));
+            upload.addMultipartParameter("_method", "PUT");
+        } else {
+            upload = new ANRequest.MultiPartBuilder(PRODUK);
+        }
+        upload.addMultipartFile("gambar_utama", file)
+                .addMultipartParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
+                .addMultipartParameter("created_by", String.valueOf(session.getUser().getData().getId()))
+                .addMultipartParameter("nama", etJudul.getText().toString())
                 .addMultipartParameter("deskripsi", etDeskripsi.getText().toString())
+                .addMultipartParameter("harga", etHarga.getText().toString())
                 .addMultipartParameter("stok", etStok.getText().toString())
-                .addMultipartParameter("kategori[]", String.valueOf(1))
-                .addMultipartParameter("status", String.valueOf(1))
-                .addMultipartFile("gambar_utama", file)
+                .addMultipartParameter("status", "1")
+                .addMultipartParameter("id_kategori", String.valueOf(id_kategori))
+                .addMultipartFile("gambar[]", file)
+//                .addMultipartParameter("gambar[]", String.valueOf(file))
                 .build()
                 .setUploadProgressListener(new UploadProgressListener() {
                     @Override
@@ -237,42 +252,20 @@ public class DialogProdukFragment extends DialogFragment {
                     public void onResponse(Object response) {
                         closeDialog();
                         if (response instanceof UploadProdukResponse) {
-                            callbackResult.sendResult(((UploadProdukResponse) response).getData());
+                            callbackResult.sendResult();
                             dismiss();
                         }
                     }
 
                     @Override
                     public void onError(ANError anError) {
-                        Log.d("ERROR Response", anError.getErrorDetail());
+                        Log.d("ERROR Response", anError.getErrorBody());
                         closeDialog();
                     }
                 });
-    }
 
-//    private void editPengumuman() {
-//        openDialog();
-//        AndroidNetworking.put(OauthConstans.AUTHENTICATION_SERVER_URL + "api/master/produk")
-//                .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
-//                .addBodyParameter(getVoucherUpload())
-//                .build()
-//                .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {
-//                    @Override
-//                    public void onResponse(Object response) {
-//                        closeDialog();
-//                        if (response instanceof UploadBannerResponse) {
-//                            callbackResult.sendResult(((UploadBannerResponse) response).getData());
-//                            dismiss();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(ANError anError) {
-//                        Log.d("ERROR Response", anError.getErrorDetail());
-//                        closeDialog();
-//                    }
-//                });
-//    }
+
+    }
 
     void openDialog() {
         progressDialog = ProgressDialog.show(getActivity(), "Harap tunggu", "Prosess .  . .");
@@ -284,24 +277,49 @@ public class DialogProdukFragment extends DialogFragment {
         progressDialog.dismiss();
     }
 
-    @OnClick(R.id.add_image)
-    public void onViewClicked() {
-        if(checkPermission()){
-            addImage();
-        }else {
-            requestPermission();
-        }
+    private void getKategori() {
+        openDialog();
+        AndroidNetworking.get(KATEGORI)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
+                .build()
+                .getAsObject(KategoriResponse.class, new ParsedRequestListener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        closeDialog();
+                        if (response instanceof KategoriResponse) {
+                            itemKategoriList.addAll(((KategoriResponse) response).getData());
+                            for (int i = 0; i < itemKategoriList.size(); i++) {
+                                stringArrayList.add(itemKategoriList.get(i).getNama());
+                            }
+                            kategoriDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.d("ERROR RESPONSE", anError.getErrorDetail());
+                        closeDialog();
+
+                    }
+                });
     }
 
-//    public DataItemPengumuman getVoucherUpload() {
-//        DataItemPengumuman dataItemBanner = new DataItemPengumuman();
-//        dataItemBanner.setIdToko(String.valueOf(1));
-//        dataItemBanner.setIsi(etIsi.getText().toString());
-//        dataItemBanner.setJudul(etJudul.getText().toString());
-//        return dataItemBanner;
-//    }
+    public void kategoriDialog() {
 
-    public interface CallbackResult {
-        void sendResult(Object obj);
+        String[] items = new String[stringArrayList.size()];
+
+        items = stringArrayList.toArray(items);
+
+        final String[] finalItems = items;
+        CommonUtil.dialogArray(getActivity(), items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                etKategori.setText(finalItems[which]);
+                pos = which;
+                id_kategori = itemKategoriList.get(which).getId();
+            }
+        });
+
     }
+
 }

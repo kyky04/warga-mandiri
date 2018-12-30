@@ -2,7 +2,9 @@ package co.id.wargamandiri.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ImageItem{
+import java.io.Serializable;
+
+public class ImageItem implements Serializable {
 
 	@SerializedName("id_produk")
 	private int idProduk;

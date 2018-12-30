@@ -2,7 +2,9 @@ package co.id.wargamandiri.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataItemBank {
+import java.io.Serializable;
+
+public class DataItemBank implements Serializable {
 
 	@SerializedName("updated_at")
 	private String updatedAt;
@@ -13,7 +15,7 @@ public class DataItemBank {
 	@SerializedName("updated_by")
 	private int updatedBy;
 
-	@SerializedName("no_rekening")
+	@SerializedName("nomor_rekening")
 	private String noRekening;
 
 	@SerializedName("created_at")

@@ -4,154 +4,176 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataItemMember {
 
-	@SerializedName("updated_at")
-	private String updatedAt;
+    @SerializedName("updated_at")
+    private String updatedAt;
 
-	@SerializedName("id_toko")
-	private int idToko;
+    @SerializedName("id_toko")
+    private int idToko;
 
-	@SerializedName("nomor_telepon")
-	private Object nomorTelepon;
+    @SerializedName("nomor_telepon")
+    private Object nomorTelepon;
 
-	@SerializedName("name")
-	private String name;
+    @SerializedName("name")
+    private String name;
 
-	@SerializedName("updated_by")
-	private Object updatedBy;
+    @SerializedName("updated_by")
+    private Object updatedBy;
 
-	@SerializedName("created_at")
-	private String createdAt;
+    @SerializedName("created_at")
+    private String createdAt;
 
-	@SerializedName("admin")
-	private boolean admin;
+    @SerializedName("admin")
+    private boolean admin;
 
-	@SerializedName("id")
-	private int id;
+    @SerializedName("id")
+    private int id;
 
-	@SerializedName("saldo")
-	private String saldo;
+    @SerializedName("saldo")
+    private String saldo;
 
-	@SerializedName("created_by")
-	private Object createdBy;
+    @SerializedName("created_by")
+    private Object createdBy;
 
-	@SerializedName("email")
-	private String email;
+    @SerializedName("email")
+    private String email;
 
-	@SerializedName("status")
-	private int status;
+    @SerializedName("status")
+    private int status;
 
-	public void setUpdatedAt(String updatedAt){
-		this.updatedAt = updatedAt;
-	}
+    @SerializedName("android_token")
+    private String android_token;
 
-	public String getUpdatedAt(){
-		return updatedAt;
-	}
+    @SerializedName("foto")
+    private String foto;
 
-	public void setIdToko(int idToko){
-		this.idToko = idToko;
-	}
+    public String getAndroid_token() {
+        return android_token;
+    }
 
-	public int getIdToko(){
-		return idToko;
-	}
+    public void setAndroid_token(String android_token) {
+        this.android_token = android_token;
+    }
 
-	public void setNomorTelepon(Object nomorTelepon){
-		this.nomorTelepon = nomorTelepon;
-	}
+    public String getFoto() {
+        return foto;
+    }
 
-	public Object getNomorTelepon(){
-		return nomorTelepon;
-	}
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
 
-	public void setName(String name){
-		this.name = name;
-	}
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
-	public String getName(){
-		return name;
-	}
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
 
-	public void setUpdatedBy(Object updatedBy){
-		this.updatedBy = updatedBy;
-	}
+    public void setIdToko(int idToko) {
+        this.idToko = idToko;
+    }
 
-	public Object getUpdatedBy(){
-		return updatedBy;
-	}
+    public int getIdToko() {
+        return idToko;
+    }
 
-	public void setCreatedAt(String createdAt){
-		this.createdAt = createdAt;
-	}
+    public void setNomorTelepon(Object nomorTelepon) {
+        this.nomorTelepon = nomorTelepon;
+    }
 
-	public String getCreatedAt(){
-		return createdAt;
-	}
+    public Object getNomorTelepon() {
+        return nomorTelepon;
+    }
 
-	public void setAdmin(boolean admin){
-		this.admin = admin;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean isAdmin(){
-		return admin;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setId(int id){
-		this.id = id;
-	}
+    public void setUpdatedBy(Object updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	public int getId(){
-		return id;
-	}
+    public Object getUpdatedBy() {
+        return updatedBy;
+    }
 
-	public void setSaldo(String saldo){
-		this.saldo = saldo;
-	}
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public String getSaldo(){
-		return saldo;
-	}
+    public String getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setCreatedBy(Object createdBy){
-		this.createdBy = createdBy;
-	}
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 
-	public Object getCreatedBy(){
-		return createdBy;
-	}
+    public boolean isAdmin() {
+        return admin;
+    }
 
-	public void setEmail(String email){
-		this.email = email;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getEmail(){
-		return email;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setStatus(int status){
-		this.status = status;
-	}
+    public void setSaldo(String saldo) {
+        this.saldo = saldo;
+    }
 
-	public int getStatus(){
-		return status;
-	}
+    public String getSaldo() {
+        return saldo;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"DataItemMember{" +
-			"updated_at = '" + updatedAt + '\'' + 
-			",id_toko = '" + idToko + '\'' + 
-			",nomor_telepon = '" + nomorTelepon + '\'' + 
-			",name = '" + name + '\'' + 
-			",updated_by = '" + updatedBy + '\'' + 
-			",created_at = '" + createdAt + '\'' + 
-			",admin = '" + admin + '\'' + 
-			",id = '" + id + '\'' + 
-			",saldo = '" + saldo + '\'' + 
-			",created_by = '" + createdBy + '\'' + 
-			",email = '" + email + '\'' + 
-			",status = '" + status + '\'' + 
-			"}";
-		}
+    public void setCreatedBy(Object createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Object getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "DataItemMember{" +
+                        "updated_at = '" + updatedAt + '\'' +
+                        ",id_toko = '" + idToko + '\'' +
+                        ",nomor_telepon = '" + nomorTelepon + '\'' +
+                        ",name = '" + name + '\'' +
+                        ",updated_by = '" + updatedBy + '\'' +
+                        ",created_at = '" + createdAt + '\'' +
+                        ",admin = '" + admin + '\'' +
+                        ",id = '" + id + '\'' +
+                        ",saldo = '" + saldo + '\'' +
+                        ",created_by = '" + createdBy + '\'' +
+                        ",email = '" + email + '\'' +
+                        ",status = '" + status + '\'' +
+                        "}";
+    }
 }

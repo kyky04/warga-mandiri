@@ -15,7 +15,7 @@ import co.id.wargamandiri.fragments.MasterVoucherFragment;
 
 public class VpAdapterDataMaster extends FragmentStatePagerAdapter {
 
-    private String[] tabTitles = new String[]{"Kategori", "Produk", "Voucher"};
+    private String[] tabTitles = new String[]{"Kategori", "Voucher"};
 
     public VpAdapterDataMaster(FragmentManager fm) {
         super(fm);
@@ -33,10 +33,10 @@ public class VpAdapterDataMaster extends FragmentStatePagerAdapter {
             case 0:
                 MasterKetegoriFragment masterKetegoriFragment = new MasterKetegoriFragment();
                 return masterKetegoriFragment;
+//            case 1:
+//                MasterProdukFragment masterProdukFragment = new MasterProdukFragment();
+//                return masterProdukFragment;
             case 1:
-                MasterProdukFragment masterProdukFragment = new MasterProdukFragment();
-                return masterProdukFragment;
-            case 2:
                 MasterVoucherFragment masterVoucherFragment = new MasterVoucherFragment();
                 return masterVoucherFragment;
 
@@ -47,6 +47,6 @@ public class VpAdapterDataMaster extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 }

@@ -62,16 +62,104 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_large">
 
-            <EditText
-                android:id="@+id/et_nama"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:hint="Nama Rekening"
-                android:maxLines="2"
-                android:minHeight="@dimen/spacing_xxlarge"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textColorHint="@color/grey_40" />
+                app:cardCornerRadius="@dimen/spacing_small"
+                app:cardUseCompatPadding="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <LinearLayout
+                        android:id="@+id/lyt_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_centerInParent="true"
+                        android:background="@color/blue_500"
+                        android:clickable="true"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_large">
+
+                        <TextView
+                            android:id="@+id/no_rek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/spacing_xlarge"
+                            android:text="1 2 3 4 5 6 7 8 9 1 0"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:maxLines="3"
+                            android:text="ATAS NAMA"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:id="@+id/atas_nama"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="3"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:maxLines="3"
+                            android:text="REKENING"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:id="@+id/nama_bank"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/spacing_medium">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/visa" />
+
+                        <ImageButton
+                            android:id="@+id/more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="?android:attr/actionBarSize"
+                            android:layout_alignParentRight="true"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:tint="@color/grey_60"
+                            app:srcCompat="@drawable/ic_more_vert" />
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+
+            </android.support.v7.widget.CardView>
+
 
             <EditText
                 android:id="@+id/et_no_rek"
@@ -81,6 +169,7 @@
                 android:gravity="top"
                 android:hint="No Rekening"
                 android:inputType="number"
+                android:textAllCaps="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColorHint="@color/grey_40" />
 
@@ -91,7 +180,18 @@
                 android:layout_marginTop="@dimen/spacing_large"
                 android:gravity="top"
                 android:hint="Atas Nama"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:inputType="text"
+                android:textAllCaps="true"
+                android:textColorHint="@color/grey_40" />
+
+            <EditText
+                android:id="@+id/et_nama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:hint="Nama Bank"
+                android:textAllCaps="true"
+                android:inputType="text"
                 android:textColorHint="@color/grey_40" />
         </LinearLayout>
 

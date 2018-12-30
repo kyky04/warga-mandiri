@@ -10,17 +10,20 @@ public class DetailItem{
 	@SerializedName("id_order")
 	private int idOrder;
 
+	@SerializedName("keterangan")
+	private String keterangan;
+
 	@SerializedName("total")
-	private int total;
+	private String total;
 
 	@SerializedName("harga")
-	private int harga;
-
-	@SerializedName("jumlah")
-	private int jumlah;
+	private String harga;
 
 	@SerializedName("updated_at")
 	private String updatedAt;
+
+	@SerializedName("qty")
+	private int qty;
 
 	@SerializedName("updated_by")
 	private int updatedBy;
@@ -50,28 +53,28 @@ public class DetailItem{
 		return idOrder;
 	}
 
-	public void setTotal(int total){
+	public void setKeterangan(String keterangan){
+		this.keterangan = keterangan;
+	}
+
+	public String getKeterangan(){
+		return keterangan;
+	}
+
+	public void setTotal(String total){
 		this.total = total;
 	}
 
-	public int getTotal(){
+	public String getTotal(){
 		return total;
 	}
 
-	public void setHarga(int harga){
+	public void setHarga(String harga){
 		this.harga = harga;
 	}
 
-	public int getHarga(){
+	public String getHarga(){
 		return harga;
-	}
-
-	public void setJumlah(int jumlah){
-		this.jumlah = jumlah;
-	}
-
-	public int getJumlah(){
-		return jumlah;
 	}
 
 	public void setUpdatedAt(String updatedAt){
@@ -80,6 +83,14 @@ public class DetailItem{
 
 	public String getUpdatedAt(){
 		return updatedAt;
+	}
+
+	public void setQty(int qty){
+		this.qty = qty;
+	}
+
+	public int getQty(){
+		return qty;
 	}
 
 	public void setUpdatedBy(int updatedBy){
@@ -120,10 +131,11 @@ public class DetailItem{
 			"DetailItem{" + 
 			"id_produk = '" + idProduk + '\'' + 
 			",id_order = '" + idOrder + '\'' + 
+			",keterangan = '" + keterangan + '\'' + 
 			",total = '" + total + '\'' + 
 			",harga = '" + harga + '\'' + 
-			",jumlah = '" + jumlah + '\'' + 
 			",updated_at = '" + updatedAt + '\'' + 
+			",qty = '" + qty + '\'' + 
 			",updated_by = '" + updatedBy + '\'' + 
 			",created_at = '" + createdAt + '\'' + 
 			",id = '" + id + '\'' + 

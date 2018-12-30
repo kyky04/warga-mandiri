@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MenuFragment">
 
     <ScrollView
@@ -16,6 +16,16 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_large">
 
+            <TextView
+                android:id="@+id/tv_pesan_pembuka"
+                android:layout_gravity="center"
+                fontPath="fonts/lato_regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PESAN PEMBUKA"
+                android:textSize="15sp"
+                tools:ignore="MissingPrefix" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,49 +36,6 @@
                 android:paddingRight="@dimen/spacing_very_small"
                 android:paddingTop="@dimen/spacing_very_small"
                 android:visibility="visible">
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_medium"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="3dp"
-                    app:cardElevation="2dp">
-
-                    <RelativeLayout
-                        android:id="@+id/btn_transaksi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/img_transaksi"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:padding="@dimen/spacing_large"
-                            android:src="@drawable/ic_transaksi" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_below="@+id/img_transaksi"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/spacing_medium">
-
-                            <TextView
-                                fontPath="fonts/lato_regular.ttf"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TRANSAKSI"
-                                android:textSize="12sp"
-                                tools:ignore="MissingPrefix" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
                     android:layout_width="0dp"
@@ -105,6 +72,49 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="DATA MASTER"
+                                android:textSize="12sp"
+                                tools:ignore="MissingPrefix" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="3dp"
+                    app:cardElevation="2dp">
+
+                    <RelativeLayout
+                        android:id="@+id/btn_produk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/img_transaksi"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:padding="@dimen/spacing_large"
+                            android:src="@drawable/ic_transaksi" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_below="@+id/img_transaksi"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/spacing_medium">
+
+                            <TextView
+                                fontPath="fonts/lato_regular.ttf"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PRODUK"
                                 android:textSize="12sp"
                                 tools:ignore="MissingPrefix" />
 
@@ -178,23 +188,23 @@
                     app:cardElevation="2dp">
 
                     <RelativeLayout
-                        android:id="@+id/btn_notifikasi"
+                        android:id="@+id/btn_banner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/img_notifikasi"
+                            android:id="@+id/img_banner"
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:padding="@dimen/spacing_large"
-                            android:src="@drawable/ic_notifikasi" />
+                            android:src="@drawable/ic_banner" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
-                            android:layout_below="@+id/img_notifikasi"
+                            android:layout_below="@+id/img_banner"
                             android:gravity="center"
                             android:orientation="horizontal"
                             android:padding="@dimen/spacing_medium">
@@ -203,7 +213,7 @@
                                 fontPath="fonts/lato_regular.ttf"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="NOTIFIKASI"
+                                android:text="BANNER"
                                 android:textSize="12sp"
                                 tools:ignore="MissingPrefix" />
 
@@ -211,6 +221,8 @@
 
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -233,7 +245,7 @@
                     app:cardElevation="2dp">
 
                     <RelativeLayout
-                        android:id="@+id/btn_user"
+                        android:id="@+id/btn_transaksi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
@@ -244,7 +256,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
                             android:padding="@dimen/spacing_large"
-                            android:src="@drawable/ic_user" />
+                            android:src="@drawable/ic_pesanan" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -258,7 +270,7 @@
                                 fontPath="fonts/lato_regular.ttf"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="USER"
+                                android:text="TRANSAKSI"
                                 android:textSize="12sp"
                                 tools:ignore="MissingPrefix" />
 
@@ -321,50 +333,6 @@
                 android:paddingTop="@dimen/spacing_very_small"
                 android:visibility="visible">
 
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_medium"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="3dp"
-                    app:cardElevation="2dp">
-
-                    <RelativeLayout
-                        android:id="@+id/btn_banner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/img_banner"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:padding="@dimen/spacing_large"
-                            android:src="@drawable/ic_banner" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_below="@+id/img_banner"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/spacing_medium">
-
-                            <TextView
-                                fontPath="fonts/lato_regular.ttf"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="BANNER"
-                                android:textSize="12sp"
-                                tools:ignore="MissingPrefix" />
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
-
                 <android.support.v7.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -407,7 +375,64 @@
 
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="3dp"
+                    app:cardElevation="2dp">
+
+                    <RelativeLayout
+                        android:id="@+id/btn_notifikasi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/img_notifikasi"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:padding="@dimen/spacing_large"
+                            android:src="@drawable/ic_notifikasi" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_below="@+id/img_notifikasi"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/spacing_medium">
+
+                            <TextView
+                                fontPath="fonts/lato_regular.ttf"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="BUAT TOKO ANDA"
+                                android:textSize="12sp"
+                                tools:ignore="MissingPrefix" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_pesan_penutup"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_gravity="center"
+                fontPath="fonts/lato_regular.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PESAN PENUTUP"
+                android:textSize="15sp"
+                tools:ignore="MissingPrefix" />
 
 
         </LinearLayout>

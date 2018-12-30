@@ -52,6 +52,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -67,8 +72,10 @@ import co.id.wargamandiri.helper.FileUtil;
 import co.id.wargamandiri.helper.StringUtils;
 import co.id.wargamandiri.models.LoginResponse;
 import co.id.wargamandiri.utils.CommonUtil;
+import kellinwood.security.zipsigner.Base64;
 import kellinwood.security.zipsigner.ZipSigner;
 import kellinwood.security.zipsigner.optional.CustomKeySigner;
+import kellinwood.security.zipsigner.optional.KeyStoreFileManager;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -86,7 +93,7 @@ public class BikinActivity extends AppCompatActivity {
     String pathfile;
     String status = "sukses";
     File tempFile = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/tmpzip.tmp");
-    String username = "wargamandiri";
+    String username = "warga";
     String versi = "1";
     int warna = -30584;
     @BindView(R.id.image_bg)
@@ -163,9 +170,9 @@ public class BikinActivity extends AppCompatActivity {
         btnUpload.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkPermission()){
+                if (checkPermission()) {
                     addImage();
-                }else {
+                } else {
                     requestPermission();
                 }
             }
@@ -429,7 +436,7 @@ public class BikinActivity extends AppCompatActivity {
     }
 
     public void copyKey(File dst) throws IOException {
-        InputStream in = getAssets().open("keystore.jks");
+        InputStream in = getAssets().open("mandiri");
         OutputStream out = new FileOutputStream(dst);
         byte[] buf = new byte[1024];
         while (true) {
@@ -459,7 +466,6 @@ public class BikinActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     public void copyIcon(File src, File dst) throws IOException {
@@ -502,9 +508,20 @@ public class BikinActivity extends AppCompatActivity {
         } catch (IOException e2) {
             e2.printStackTrace();
         }
-//        String tulisan = StringUtils.join(list, "\n").replaceFirst(Config.TAG_TOKO_NAMA, username).replace("namatoko.situsbelanja.com", username + ".situsbelanja.com").replace("namatoko.olshp.com", username + ".olshp.com").replace("Nama Toko", namaaplikasi).replaceFirst("com.bikinaplikasi.onlineshop", "com.bikinaplikasi." + username).replaceFirst("com.bikinaplikasi.onlineshop.permission.C2D_MESSAGE", "com.bikinaplikasi." + username + ".permission.C2D_MESSAGE").replaceFirst("com.bikinaplikasi.onlineshop.google_measurement_service", "com.bikinaplikasi." + username + ".google_measurement_service").replace("android:debuggable=\"true\"", "android:debuggable=\"false\"").replace("4.24", versi + ".0");
-        String tulisan = StringUtils.join(list, "\n").replaceFirst(Config.TAG_TOKO_NAMA, username).replace("Nama Toko", namaaplikasi).replace("112", versi + ".0");
-//        int int_value = Integer.parseInt(versi);
+
+        Log.d("MANIFEST", "editManifest: " + list.toString());
+//        String tulisan = StringUtils.join(list, "\n").replace("id.metamorph.shop", username + ".metamorph.shop").replace("Nama Toko", namaaplikasi).replaceFirst("id.metamorph.shop", "id.metamorph." + username).replace("31.0", versi + ".0");
+        String tulisan = StringUtils.join(list, "\n")
+                .replaceFirst(Config.TAG_TOKO_NAMA, this.username)
+                .replace("namatoko.situsbelanja.com", this.username + ".situsbelanja.com")
+                .replace("namatoko.olshp.com", this.username + ".olshp.com")
+                .replace("Nama Toko", this.namaaplikasi)
+                .replaceFirst("com.WARGAMANDIRI.onlineshop", "com.WARGAMANDIRI." + this.username)
+                .replaceFirst("com.WARGAMANDIRI.onlineshop.permission.C2D_MESSAGE", "com.WARGAMANDIRI." + this.username + ".permission.C2D_MESSAGE")
+                .replaceFirst("com.WARGAMANDIRI.onlineshop.google_measurement_service", "com.WARGAMANDIRI." + this.username + ".google_measurement_service")
+                .replace("android:debuggable=\"true\"", "android:debuggable=\"false\"")
+                .replace("4.24", this.versi + ".0");
+        int int_value = Integer.parseInt(versi);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp", "AndroidManifest.xml");
         try {
@@ -522,11 +539,11 @@ public class BikinActivity extends AppCompatActivity {
         } catch (FileNotFoundException e32) {
             e32.printStackTrace();
         }
-//        try {
-//            out.write(baos.toByteArray());
-//        } catch (IOException e222) {
-//            e222.printStackTrace();
-//        }
+        try {
+            out.write(baos.toByteArray());
+        } catch (IOException e222) {
+            e222.printStackTrace();
+        }
     }
 
     public void copyManifest(File dst) throws IOException {
@@ -603,7 +620,7 @@ public class BikinActivity extends AppCompatActivity {
                     try {
                         createDataLogin();
                         copy(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk"));
-//                        copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
+                        copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
 //                        editManifest();
                         if (gambaricon == null) {
                             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un");
@@ -627,20 +644,46 @@ public class BikinActivity extends AppCompatActivity {
 //                            addManifest(fileapk, filemanifest);
                             addIcon(fileapk, fileicon);
                             addDataLogin(fileapk, filelogin);
-                            new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk").renameTo(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk"));
-                            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk");
-                            File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/NamaToko.apk");
+                            new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk").renameTo(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk"));
+                            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk");
+                            File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/warga.apk");
                             try {
-                                String generatedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk";
+                                String generatedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk";
                                 String signedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/" + username + ".apk";
+//                                ZipSigner zipSigner = new ZipSigner();
+//                                String keystore = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/mandiri";
+//                                file = new File(keystore);
+//                                char[] keyAliasPassword = "12345678".toCharArray();
+//                                copyKey(file);
+//
+//                                CustomKeySigner.signZip(zipSigner, keystore, "12345678".toCharArray(), "cert", keyAliasPassword, "SHA1withRSA", generatedApkPath, signedApkPath);
+//                                pathfile = signedApkPath;
+//                                lanjut = false;
+                                //                            String generatedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk";
+//                                String signedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/" + namaaplikasi + ".apk";
                                 ZipSigner zipSigner = new ZipSigner();
-                                String keystore = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/keystore.jks";
-                                file = new File(keystore);
-                                char[] keyAliasPassword = "password".toCharArray();
-                                copyKey(file);
-                                CustomKeySigner.signZip(zipSigner, keystore, "password".toCharArray(), "mandiri", keyAliasPassword, "SHA1withRSA", generatedApkPath, signedApkPath);
-                                pathfile = signedApkPath;
-                                lanjut = false;
+                                File keyfile = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/mandiri");
+                                char[] keystorePassword = "mandiri".toCharArray();
+                                String keyAlias = "mandiri";
+                                char[] keyAliasPassword = "mandiri".toCharArray();
+                                copyKey(keyfile);
+                                String keystore = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/mandiri";
+
+//                                PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(keyAliasPassword));
+//
+//                                KeyFactory keyf;
+//                                keyf = KeyFactory.getInstance("RSA");
+//                                PrivateKey priKey = keyf.generatePrivate(priPKCS8);
+
+
+                                zipSigner.issueLoadingCertAndKeysProgressEvent();
+                                KeyStore keystore2 = KeyStoreFileManager.loadKeyStore(keystore, keystorePassword);
+
+
+                                zipSigner.setKeys("mandiri", (X509Certificate) keystore2.getCertificate(keyAlias), (PrivateKey) keystore2.getKey(keyAlias, keyAliasPassword), "SHA1WITHRSA", null);
+                                zipSigner.signZip(generatedApkPath, signedApkPath);
+                                this.pathfile = signedApkPath;
+                                this.lanjut = false;
                             } catch (Throwable th) {
                                 status = "gagal";
                                 lanjut = false;
@@ -649,7 +692,7 @@ public class BikinActivity extends AppCompatActivity {
                         } catch (IOException e2) {
                             status = "gagal";
                             lanjut = false;
-                            Log.d("ERRORE2", String.valueOf(e2.getMessage())+" "+e2.getStackTrace());
+                            Log.d("ERRORE2", String.valueOf(e2.getMessage()) + " " + e2.getStackTrace());
                         }
                     } catch (IOException e3) {
                         status = "gagal";
@@ -662,11 +705,11 @@ public class BikinActivity extends AppCompatActivity {
         }
         if (!lanjut) {
             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp");
-            fileapk = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk");
+            fileapk = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk");
             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un");
             fileco = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/co");
             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/keystore.jks");
+            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/mandiri");
             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png");
             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/1.tmp");
             file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/2.tmp");
@@ -683,6 +726,69 @@ public class BikinActivity extends AppCompatActivity {
         }
     }
 
+//    public void bikin() {
+//        File file;
+//        File fileapk;
+//        bikinFolder();
+//        if (this.lanjut) {
+//            if (this.lanjut) {
+//                try {
+//                    copy(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk"));
+//                    copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
+////                    editManifest();
+//                    if (this.gambaricon == null) {
+//                        file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ad");
+//                    } else {
+//                        file = new File(this.gambaricon);
+//                    }
+//                    try {
+//                        copyIcon(file, new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png"));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    this.lanjut = true;
+//                    fileapk = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk");
+//                    File[] filemanifest = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml")};
+//                    File[] fileicon = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png")};
+//                    try {
+//                        addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ad")});
+//                        addManifest(fileapk, filemanifest);
+//                        addIcon(fileapk, fileicon);
+//                        new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk").renameTo(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk"));
+//                        file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk");
+//                        File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/warga.apk");
+//                        try {
+//                            String generatedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk";
+//                            String signedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/" + namaaplikasi + ".apk";
+//                            ZipSigner zipSigner = new ZipSigner();
+//                            File keyfile = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/mandiri");
+//                            char[] keystorePassword = "12345678".toCharArray();
+//                            String keyAlias = "cert";
+//                            char[] keyAliasPassword = "12345678".toCharArray();
+//                            copyKey(keyfile);
+//                            String keystore = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/mandiri";
+//                            zipSigner.issueLoadingCertAndKeysProgressEvent();
+//                            KeyStore keystore2 = KeyStoreFileManager.loadKeyStore(keystore, keystorePassword);
+//                            zipSigner.setKeys("custom", (X509Certificate) keystore2.getCertificate(keyAlias), (PrivateKey) keystore2.getKey(keyAlias, keyAliasPassword), "SHA1WITHRSA", null);
+//                            zipSigner.signZip(generatedApkPath, signedApkPath);
+//                            this.pathfile = signedApkPath;
+//                            this.lanjut = false;
+//                        } catch (Throwable th) {
+//                            this.status = "gagal";
+//                            this.lanjut = false;
+//                        }
+//                    } catch (IOException e2) {
+//                        this.status = "gagal";
+//                        this.lanjut = false;
+//                    }
+//                } catch (IOException e3) {
+//                    this.status = "gagal";
+//                    e3.printStackTrace();
+//                    this.lanjut = false;
+//                }
+//            }
+//        }
+//    }
 
 
     private void createDataLogin() {

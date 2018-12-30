@@ -2,108 +2,132 @@ package co.id.wargamandiri.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataItemBanner {
+import java.io.Serializable;
 
-	@SerializedName("keterangan")
-	private String keterangan;
+public class DataItemBanner implements Serializable {
 
-	@SerializedName("updated_at")
-	private String updatedAt;
+    @SerializedName("keterangan")
+    private String keterangan;
 
-	@SerializedName("id_toko")
-	private int idToko;
+    @SerializedName("nama")
+    private String nama;
 
-	@SerializedName("updated_by")
-	private int updatedBy;
+    @SerializedName("updated_at")
+    private String updatedAt;
 
-	@SerializedName("created_at")
-	private String createdAt;
+    @SerializedName("id_toko")
+    private int idToko;
 
-	@SerializedName("id")
-	private int id;
+    @SerializedName("updated_by")
+    private int updatedBy;
 
-	@SerializedName("gambar")
-	private String gambar;
+    @SerializedName("created_at")
+    private String createdAt;
 
-	@SerializedName("created_by")
-	private int createdBy;
+    @SerializedName("id")
+    private int id;
 
-	public void setKeterangan(String keterangan){
-		this.keterangan = keterangan;
-	}
+    @SerializedName("gambar")
+    private String gambar;
 
-	public String getKeterangan(){
-		return keterangan;
-	}
+    @SerializedName("created_by")
+    private int createdBy;
 
-	public void setUpdatedAt(String updatedAt){
-		this.updatedAt = updatedAt;
-	}
+    @SerializedName("status")
+    private int status;
 
-	public String getUpdatedAt(){
-		return updatedAt;
-	}
+    public String getNama() {
+        return nama;
+    }
 
-	public void setIdToko(int idToko){
-		this.idToko = idToko;
-	}
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
 
-	public int getIdToko(){
-		return idToko;
-	}
+    public int getStatus() {
+        return status;
+    }
 
-	public void setUpdatedBy(int updatedBy){
-		this.updatedBy = updatedBy;
-	}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-	public int getUpdatedBy(){
-		return updatedBy;
-	}
+    public void setKeterangan(String keterangan) {
+        this.keterangan = keterangan;
+    }
 
-	public void setCreatedAt(String createdAt){
-		this.createdAt = createdAt;
-	}
+    public String getKeterangan() {
+        return keterangan;
+    }
 
-	public String getCreatedAt(){
-		return createdAt;
-	}
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
-	public void setId(int id){
-		this.id = id;
-	}
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
 
-	public int getId(){
-		return id;
-	}
+    public void setIdToko(int idToko) {
+        this.idToko = idToko;
+    }
 
-	public void setGambar(String gambar){
-		this.gambar = gambar;
-	}
+    public int getIdToko() {
+        return idToko;
+    }
 
-	public String getGambar(){
-		return gambar;
-	}
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	public void setCreatedBy(int createdBy){
-		this.createdBy = createdBy;
-	}
+    public int getUpdatedBy() {
+        return updatedBy;
+    }
 
-	public int getCreatedBy(){
-		return createdBy;
-	}
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"DataItemBanner{" +
-			"keterangan = '" + keterangan + '\'' + 
-			",updated_at = '" + updatedAt + '\'' + 
-			",id_toko = '" + idToko + '\'' + 
-			",updated_by = '" + updatedBy + '\'' + 
-			",created_at = '" + createdAt + '\'' + 
-			",id = '" + id + '\'' + 
-			",gambar = '" + gambar + '\'' + 
-			",created_by = '" + createdBy + '\'' + 
-			"}";
-		}
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
+    }
+
+    public String getGambar() {
+        return gambar;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getCreatedBy() {
+        return createdBy;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "DataItemBanner{" +
+                        "keterangan = '" + keterangan + '\'' +
+                        ",updated_at = '" + updatedAt + '\'' +
+                        ",id_toko = '" + idToko + '\'' +
+                        ",updated_by = '" + updatedBy + '\'' +
+                        ",created_at = '" + createdAt + '\'' +
+                        ",id = '" + id + '\'' +
+                        ",gambar = '" + gambar + '\'' +
+                        ",created_by = '" + createdBy + '\'' +
+                        "}";
+    }
 }

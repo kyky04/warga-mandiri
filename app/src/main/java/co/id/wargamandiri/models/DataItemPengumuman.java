@@ -2,7 +2,9 @@ package co.id.wargamandiri.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataItemPengumuman {
+import java.io.Serializable;
+
+public class DataItemPengumuman implements Serializable {
 
 	@SerializedName("updated_at")
 	private String updatedAt;

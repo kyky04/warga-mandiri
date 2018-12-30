@@ -32,12 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterBank;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.BankAdapter;
 import co.id.wargamandiri.models.BankResponse;
 import co.id.wargamandiri.models.DataItemBank;
 import co.id.wargamandiri.utils.Session;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.BANK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,15 +46,15 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class KelolaDataBankFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
     @BindView(R.id.fab_add_banner)
-    FloatingActionButton fabAddBanner;
+    FloatingActionButton fabAdd;
     Unbinder unbinder;
 
-    AdapterBank adapterBanner;
+    BankAdapter adapter;
 
     Session session;
 
@@ -69,29 +70,36 @@ public class KelolaDataBankFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kelola_data_toko, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterBank(getActivity());
-        getPengumuman();
-        rvBanner.setAdapter(adapterBanner);
+        session = new Session(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new BankAdapter(getActivity());
+        getData();
+        recyclerView.setAdapter(adapter);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getPengumuman();
+                getData();
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterBank.OnItemClick() {
+        adapter.setOnItemClick(new BankAdapter.OnItemClick() {
             @Override
-            public void onItemEditClick(int pos, DataItemBank dataItemBanner) {
-                showEditDialogFullscreen(dataItemBanner);
+            public void onItemClick(int pos) {
+
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemBank dataItemBanner) {
-                deleteBanner(dataItemBanner.getId());
+            public void onEditClick(int pos) {
+                showEditDialogFullscreen(adapter.getItem(pos));
+            }
+
+            @Override
+            public void onDeleteClick(int pos) {
+                delete(adapter.getItem(pos).getId());
+
             }
         });
+        fabAdd.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -106,16 +114,23 @@ public class KelolaDataBankFragment extends Fragment {
         showDialogFullscreen();
     }
 
-    private void getPengumuman() {
+    private void getData() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/master/bank")
+        AndroidNetworking.get(BANK)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
                 .build()
                 .getAsObject(BankResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
                         if (response instanceof BankResponse) {
-                            adapterBanner.swap(((BankResponse) response).getData());
+                            if(((BankResponse) response).getData().size() > 0){
+                                adapter.swap(((BankResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            }else {
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
+
                         }
                     }
 
@@ -146,35 +161,35 @@ public class KelolaDataBankFragment extends Fragment {
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogBankFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
-                getPengumuman();
+            public void sendResult() {
+                getData();
             }
         });
     }
 
-    private void showEditDialogFullscreen(DataItemBank itemPengumuman) {
+    private void showEditDialogFullscreen(DataItemBank itemBank) {
         FragmentManager fragmentManager = getFragmentManager();
-        DialogBankFragment newFragment = new DialogBankFragment();
+        DialogBankFragment newFragment = DialogBankFragment.newInstance(itemBank);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogBankFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
-                getPengumuman();
+            public void sendResult() {
+                getData();
             }
         });
     }
 
-    private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(WEB_URL + "api/master/bank/{id_bank}")
+    private void delete(int id_banner) {
+        AndroidNetworking.delete(BANK + "/{id_bank}")
                 .addPathParameter("id_bank", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Toast.makeText(getActivity(), "Bank Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-                        getPengumuman();
+                        getData();
                     }
 
                     @Override

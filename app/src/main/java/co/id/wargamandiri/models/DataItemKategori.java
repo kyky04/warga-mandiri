@@ -2,7 +2,9 @@ package co.id.wargamandiri.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DataItemKategori {
+import java.io.Serializable;
+
+public class DataItemKategori implements Serializable {
 
 	@SerializedName("keterangan")
 	private String keterangan;

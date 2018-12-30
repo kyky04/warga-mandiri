@@ -2,10 +2,15 @@ package co.id.wargamandiri.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,29 +20,46 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
+import com.bumptech.glide.Glide;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
+import co.id.wargamandiri.models.DataItemKategori;
 import co.id.wargamandiri.models.DataItemPengumuman;
-import co.id.wargamandiri.models.UploadBannerResponse;
+import co.id.wargamandiri.models.KategoriResponse;
+import co.id.wargamandiri.models.UploadPengumumaResponse;
+import co.id.wargamandiri.models.UploadProdukResponse;
+import co.id.wargamandiri.utils.CommonUtil;
+import co.id.wargamandiri.utils.Session;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.KATEGORI;
+import static co.id.wargamandiri.data.Constans.NEWS;
+import static co.id.wargamandiri.data.Constans.PRODUK;
+import static co.id.wargamandiri.data.Constans.WEB_URL_STORAGE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DialogPengumumanFragment extends DialogFragment {
+    public static final String ARG_DATA = "DATA";
+    private static final String TAG = "DialogProdukFragment";
 
 
     Unbinder unbinder;
-
     public CallbackResult callbackResult;
     @BindView(R.id.bt_close)
     ImageButton btClose;
@@ -47,13 +69,19 @@ public class DialogPengumumanFragment extends DialogFragment {
     EditText etJudul;
     @BindView(R.id.et_isi)
     EditText etIsi;
+    @BindView(R.id.card)
+    CardView card;
     @BindView(R.id.nested_scroll_view)
-
     NestedScrollView nestedScrollView;
+
     private ProgressDialog progressDialog;
     private String path;
-    private File file;
-    private int id_pengumuman;
+    File file;
+    DataItemPengumuman item;
+
+    Session session;
+
+    boolean edit = false;
 
     public void setOnCallbackResult(final CallbackResult callbackResult) {
         this.callbackResult = callbackResult;
@@ -63,15 +91,13 @@ public class DialogPengumumanFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static DialogPengumumanFragment newInstance(DataItemPengumuman dataItemPengumuman) {
-        DialogPengumumanFragment myFragment = new DialogPengumumanFragment();
+    public static DialogPengumumanFragment newInstance(DataItemPengumuman item) {
 
         Bundle args = new Bundle();
-        args.putInt("id_pengumuman", dataItemPengumuman.getId());
-        args.putString("isi", dataItemPengumuman.getIsi());
-        args.putString("judul", dataItemPengumuman.getJudul());
-        myFragment.setArguments(args);
-        return myFragment;
+        args.putSerializable(ARG_DATA, item);
+        DialogPengumumanFragment fragment = new DialogPengumumanFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -80,11 +106,12 @@ public class DialogPengumumanFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_pengumuman, container, false);
         unbinder = ButterKnife.bind(this, view);
-        if (getArguments() != null) {
-            etIsi.setText(getArguments().getString("isi"));
-            etJudul.setText(getArguments().getString("judul"));
-            id_pengumuman = getArguments().getInt("id_pengumuman");
-        }
+
+        session = new Session(getActivity());
+
+        isEdit();
+
+
         return view;
     }
 
@@ -101,64 +128,73 @@ public class DialogPengumumanFragment extends DialogFragment {
                 dismiss();
                 break;
             case R.id.bt_save:
-                if(getArguments() != null){
-                    editPengumuman();
-                }else {
-                    uploadPengumuman();
-                }
+                uploadData();
                 break;
         }
     }
+    
 
-    private void uploadPengumuman() {
-        openDialog();
-        AndroidNetworking.post(WEB_URL + "api/master/pengumuman")
-                .addBodyParameter(getPengumumanToUpload())
-                .build()
-                .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        closeDialog();
-                        if (response instanceof UploadBannerResponse) {
-                            callbackResult.sendResult(((UploadBannerResponse) response).getData());
-                            dismiss();
-                        }
-                    }
+    private boolean isEdit() {
+        if (getArguments() != null) {
+            edit = true;
+            item = (DataItemPengumuman) getArguments().getSerializable(ARG_DATA);
+            etJudul.setText(item.getJudul());
+            etIsi.setText(item.getIsi());
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.d("ERROR Response", anError.getErrorDetail());
-                        closeDialog();
-                    }
-                });
+            return true;
+        }
+        return false;
     }
 
-    private void editPengumuman() {
+    public interface CallbackResult {
+        void sendResult();
+    }
+
+
+    private void uploadData() {
         openDialog();
-        AndroidNetworking.put(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
-                .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
-                .addBodyParameter(getPengumumanToUpload())
+        ANRequest.PostRequestBuilder upload;
+        if (edit) {
+            upload = new ANRequest.PostRequestBuilder(NEWS + "/{id}");
+            upload.addPathParameter("id", String.valueOf(item.getId()));
+            upload.addBodyParameter("_method", "PUT");
+        } else {
+            upload = new ANRequest.PostRequestBuilder(NEWS);
+        }
+        upload.addBodyParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
+                .addBodyParameter("created_by", String.valueOf(session.getUser().getData().getId()))
+                .addBodyParameter("judul", etJudul.getText().toString())
+                .addBodyParameter("isi", etIsi.getText().toString())
                 .build()
-                .getAsObject(UploadBannerResponse.class, new ParsedRequestListener() {
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        progressDialog.setProgress((int) bytesUploaded);
+                    }
+                })
+                .getAsObject(UploadPengumumaResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         closeDialog();
-                        if (response instanceof UploadBannerResponse) {
-                            callbackResult.sendResult(((UploadBannerResponse) response).getData());
+                        if (response instanceof UploadPengumumaResponse) {
+//                            callbackResult.sendResult();
                             dismiss();
                         }
                     }
 
                     @Override
                     public void onError(ANError anError) {
-                        Log.d("ERROR Response", anError.getErrorDetail());
+                        Log.d("ERROR Response", anError.getErrorBody());
                         closeDialog();
                     }
                 });
+
+
     }
 
     void openDialog() {
-        progressDialog = ProgressDialog.show(getActivity(), "Harap tunggu", "Prosess .  . .");
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Harap Tunggu");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
@@ -167,15 +203,6 @@ public class DialogPengumumanFragment extends DialogFragment {
         progressDialog.dismiss();
     }
 
-    public DataItemPengumuman getPengumumanToUpload() {
-        DataItemPengumuman dataItemBanner = new DataItemPengumuman();
-        dataItemBanner.setIdToko(String.valueOf(1));
-        dataItemBanner.setIsi(etIsi.getText().toString());
-        dataItemBanner.setJudul(etJudul.getText().toString());
-        return dataItemBanner;
-    }
 
-    public interface CallbackResult {
-        void sendResult(Object obj);
-    }
+
 }

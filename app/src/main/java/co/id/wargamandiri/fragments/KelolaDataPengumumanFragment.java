@@ -32,12 +32,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterPengumuman;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.PengumumanAdapter;
 import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.PengumumanResponse;
 import co.id.wargamandiri.utils.Session;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.NEWS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,15 +46,15 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class KelolaDataPengumumanFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
     @BindView(R.id.fab_add_banner)
-    FloatingActionButton fabAddBanner;
+    FloatingActionButton fabAdd;
     Unbinder unbinder;
 
-    AdapterPengumuman adapterBanner;
+    PengumumanAdapter adapter;
 
     Session session;
 
@@ -69,11 +70,11 @@ public class KelolaDataPengumumanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kelola_data_toko, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterPengumuman(getActivity());
+        session = new Session(getActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new PengumumanAdapter(getActivity());
         getPengumuman();
-        rvBanner.setAdapter(adapterBanner);
+        recyclerView.setAdapter(adapter);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -81,17 +82,24 @@ public class KelolaDataPengumumanFragment extends Fragment {
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterPengumuman.OnItemClick() {
+        adapter.setOnItemClick(new PengumumanAdapter.OnItemClick() {
             @Override
-            public void onItemEditClick(int pos, DataItemPengumuman dataItemBanner) {
-                showEditDialogFullscreen(dataItemBanner);
+            public void onItemClick(int position) {
+
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemPengumuman dataItemBanner) {
-                deleteBanner(dataItemBanner.getId());
+            public void onItemEdit(int position) {
+                showEditDialogFullscreen(adapter.getItem(position));
+            }
+
+            @Override
+            public void onItemDelete(int position) {
+                delete(adapter.getItem(position).getId());
+
             }
         });
+        fabAdd.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -108,14 +116,20 @@ public class KelolaDataPengumumanFragment extends Fragment {
 
     private void getPengumuman() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/master/news")
+        AndroidNetworking.get(NEWS)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
                 .build()
                 .getAsObject(PengumumanResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
                         if (response instanceof PengumumanResponse) {
-                            adapterBanner.swap(((PengumumanResponse) response).getData());
+                            if(((PengumumanResponse) response).getData().size() > 0){
+                                adapter.swap(((PengumumanResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            }else {
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
                         }
                     }
 
@@ -146,7 +160,7 @@ public class KelolaDataPengumumanFragment extends Fragment {
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogPengumumanFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
+            public void sendResult() {
                 getPengumuman();
             }
         });
@@ -160,20 +174,20 @@ public class KelolaDataPengumumanFragment extends Fragment {
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogPengumumanFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
+            public void sendResult() {
                 getPengumuman();
             }
         });
     }
 
-    private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
+    private void delete(int id_banner) {
+        AndroidNetworking.delete(NEWS + "/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_banner))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "DataItemPengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Pengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
                         getPengumuman();
                     }
 

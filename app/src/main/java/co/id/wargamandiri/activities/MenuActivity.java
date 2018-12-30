@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.androidnetworking.common.ANRequest;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.ParsedRequestListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.onesignal.OneSignal;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -25,7 +33,12 @@ import co.id.wargamandiri.fragments.KelolaBuatApkFragment;
 import co.id.wargamandiri.fragments.KelolaDataTokoFragment;
 import co.id.wargamandiri.fragments.KelolaDataUserFragment;
 import co.id.wargamandiri.fragments.MenuFragment;
+import co.id.wargamandiri.models.LoginResponse;
+import co.id.wargamandiri.utils.CommonUtil;
 import co.id.wargamandiri.utils.Session;
+
+import static co.id.wargamandiri.data.Constans.LOGIN;
+import static co.id.wargamandiri.data.Constans.TOKEN;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -47,6 +60,8 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         ButterKnife.bind(this);
+        FirebaseApp.initializeApp(this);
+
 
         initView();
 
@@ -82,7 +97,9 @@ public class MenuActivity extends AppCompatActivity {
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         viewPager.setOffscreenPageLimit(5);
-        inflateDivider();
+//        inflateDivider();
+
+        token();
     }
 
     private void generateTabLayout() {
@@ -92,13 +109,13 @@ public class MenuActivity extends AppCompatActivity {
 
         vpAdapter.addFragment(kelolaDataTokoFragment, menu[1]);
         vpAdapter.addFragment(menuFragment, menu[0]);
-        vpAdapter.addFragment(kelolaBuatApkFragment, menu[2]);
+//        vpAdapter.addFragment(kelolaBuatApkFragment, menu[2]);
 
         viewPager.setAdapter(vpAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_toko).setText("Toko"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_kelola).setText("Kelola"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_buat_apk).setText("Buat APK"));
+        tabLayout.addTab(tabLayout.newTab().setText("Toko"));
+        tabLayout.addTab(tabLayout.newTab().setText("Kelola"));
+//        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_buat_apk).setText("Buat APK"));
 
         viewPager.setCurrentItem(0);
 
@@ -121,28 +138,62 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_id_logout:
-//                session.logoutUser();
-//                finish();
-//                break;
-//            case R.id.menu_id_profil:
-//                startActivity(new Intent(this,EditProfileActivity.class));
-//                break;
-//            case R.id.menu_id_change_languange:
-//                dialogEditBahasa();
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
+    private void tokenize(String userId) {
+//        String token = FirebaseInstanceId.getInstance().getToken();
+        ANRequest.PostRequestBuilder post = new ANRequest.PostRequestBuilder(TOKEN);
+        post.addBodyParameter("email", session.getUser().getData().getEmail());
+        post.addBodyParameter("android_token", userId);
+        post.build().getAsObject(LoginResponse.class, new ParsedRequestListener() {
+            @Override
+            public void onResponse(Object response) {
+                if (response instanceof LoginResponse) {
+                    if (((LoginResponse) response).isStatus()) {
+                        Log.d("TOKEN", "onResponse: "+"Token di kirim");
+                    } else {
+                        Log.d("TOKEN", "onResponse: "+"Token gagal di kirim");
+                    }
+                }
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                CommonUtil.showToast(MenuActivity.this, "Kesalahan Server");
+            }
+        });
+    }
+
+    private void token(){
+        Log.d("debug", "token: ");
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                Log.d("debug", "User:" + userId);
+                if (registrationId != null) {
+                    Log.d("debug", "registrationId:" + registrationId);
+                }
+                tokenize(userId);
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_id_logout:
+                session.logoutUser();
+                finish();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
 }

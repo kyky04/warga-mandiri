@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
@@ -67,7 +68,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.activities.LoginActivity;
 import co.id.wargamandiri.helper.AXmlEditor;
 import co.id.wargamandiri.helper.Config;
 import co.id.wargamandiri.helper.FileUtil;
@@ -77,20 +77,22 @@ import co.id.wargamandiri.utils.CommonUtil;
 import co.id.wargamandiri.utils.Session;
 import kellinwood.security.zipsigner.ZipSigner;
 import kellinwood.security.zipsigner.optional.CustomKeySigner;
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class BikinFragment extends Fragment {
+    private static final String TAG = "BikinFragment";
     private static final int REQUEST_WRITE_STORAGE = 112;
     String gambaricon = null;
     boolean lanjut = true;
-    String namaaplikasi = "wargamandiri";
+    String namaaplikasi = "aplikasimandiri";
     int num = 0;
     OutputStream out;
     String pathfile;
     String status = "sukses";
-    File tempFile = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/tmpzip.tmp");
-    String username = "wargamandiri";
+    File tempFile = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/tmpzip.tmp");
+    String username = "aplikasimandiri";
     String versi = "1";
     int warna = -30584;
 
@@ -124,6 +126,8 @@ public class BikinFragment extends Fragment {
     LinearLayout layoutWelcome;
     @BindView(R.id.layoutTest)
     LinearLayout layoutTest;
+    @BindView(R.id.img_click)
+    ImageView imgClick;
 
     private ProgressDialog progressDialog;
     private String path;
@@ -132,6 +136,11 @@ public class BikinFragment extends Fragment {
 
 
     Session session;
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
 
     public class startBikin extends AsyncTask<String, Void, String> {
@@ -146,7 +155,7 @@ public class BikinFragment extends Fragment {
                 layoutFailed.setVisibility(View.VISIBLE);
                 return;
             }
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            CommonUtil.showToast(getActivity(), "Aplikasi berhasil di buat pada folder aplikasimandiri");
             getActivity().finish();
         }
     }
@@ -200,6 +209,26 @@ public class BikinFragment extends Fragment {
                 } else {
                     requestPermission();
                 }
+            }
+        });
+
+        imgClick.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AmbilWarnaDialog dialog = new AmbilWarnaDialog(getActivity(), Color.BLACK, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                    @Override
+                    public void onCancel(AmbilWarnaDialog dialog) {
+
+                    }
+
+                    @Override
+                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                        Log.d(TAG, "onOk: "+color);
+                        imgClick.setColorFilter(color);
+                    }
+                });
+
+                dialog.show();
             }
         });
 
@@ -446,7 +475,7 @@ public class BikinFragment extends Fragment {
     }
 
     public void tempFile(File src) throws IOException {
-        File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/tmpzip.tmp");
+        File dst = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/tmpzip.tmp");
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
         byte[] buf = new byte[1024];
@@ -519,14 +548,14 @@ public class BikinFragment extends Fragment {
     public void editManifest() {
         AXmlEditor edit = new AXmlEditor();
         try {
-            copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
+            copyManifest(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/AndroidManifestt.xml"));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         List<String> list = new ArrayList();
         byte[] data = null;
         try {
-            data = FileUtil.readFile(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp", "AndroidManifest.xml"));
+            data = FileUtil.readFile(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp", "AndroidManifest.xml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -539,7 +568,7 @@ public class BikinFragment extends Fragment {
         String tulisan = StringUtils.join(list, "\n").replaceFirst(Config.TAG_TOKO_NAMA, username).replace("Nama Toko", namaaplikasi).replace("112", versi + ".0");
 //        int int_value = Integer.parseInt(versi);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp", "AndroidManifest.xml");
+        File dst = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp", "AndroidManifest.xml");
         try {
             out = new FileOutputStream(dst);
         } catch (FileNotFoundException e3) {
@@ -580,7 +609,7 @@ public class BikinFragment extends Fragment {
 
     public void bikinUN(String un) {
         try {
-            FileWriter writer = new FileWriter(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp", "un"));
+            FileWriter writer = new FileWriter(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp", "un"));
             writer.append(un);
             writer.flush();
             writer.close();
@@ -594,7 +623,7 @@ public class BikinFragment extends Fragment {
     public void bikinCO(int co) {
         String color = "#" + Integer.toHexString(co);
         try {
-            FileWriter writer = new FileWriter(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp", "co"));
+            FileWriter writer = new FileWriter(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp", "co"));
             writer.append(color);
             writer.flush();
             writer.close();
@@ -606,8 +635,8 @@ public class BikinFragment extends Fragment {
     }
 
     public void bikinFolder() {
-        File folder1 = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI");
-        File folder2 = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp");
+        File folder1 = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri");
+        File folder2 = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp");
         boolean success = true;
         if (!folder2.exists()) {
             success = folder2.mkdirs();
@@ -635,39 +664,39 @@ public class BikinFragment extends Fragment {
                     num = 333;
                     try {
                         createDataLogin();
-                        copy(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk"));
-//                        copyManifest(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml"));
-//                        editManifest();
+                        copy(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/warga.apk"));
+                        copyManifest(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/AndroidManifestt.xml"));
+                        editManifest();
                         if (gambaricon == null) {
-                            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un");
+                            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/un");
                         } else {
                             file = new File(gambaricon);
                         }
                         try {
-                            copyIcon(file, new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png"));
+                            copyIcon(file, new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/ico.png"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         lanjut = true;
-                        fileapk = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk");
-                        fileco = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/co");
-                        File[] filemanifest = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml")};
-                        File[] fileicon = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png")};
-                        File[] filelogin = new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/data_login.json")};
+                        fileapk = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/warga.apk");
+                        fileco = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/co");
+                        File[] filemanifest = new File[]{new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/AndroidManifestt.xml")};
+                        File[] fileicon = new File[]{new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/ico.png")};
+                        File[] filelogin = new File[]{new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/data_login.json")};
                         try {
-                            addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un")});
-                            addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/co")});
-//                            addManifest(fileapk, filemanifest);
+                            addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/un")});
+                            addFilesToExistingZip(fileapk, new File[]{new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/co")});
+                            addManifest(fileapk, filemanifest);
                             addIcon(fileapk, fileicon);
                             addDataLogin(fileapk, filelogin);
-                            new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/warga.apk").renameTo(new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk"));
-                            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk");
-                            File dst = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/NamaToko.apk");
+                            new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/warga.apk").renameTo(new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/NamaToko.apk"));
+                            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/NamaToko.apk");
+                            File dst = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/NamaToko.apk");
                             try {
-                                String generatedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk";
-                                String signedApkPath = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/" + username + ".apk";
+                                String generatedApkPath = Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/NamaToko.apk";
+                                String signedApkPath = Environment.getExternalStorageDirectory() + "/aplikasimandiri/" + username + ".apk";
                                 ZipSigner zipSigner = new ZipSigner();
-                                String keystore = Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/keystore.jks";
+                                String keystore = Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/keystore.jks";
                                 file = new File(keystore);
                                 char[] keyAliasPassword = "password".toCharArray();
                                 copyKey(file);
@@ -694,19 +723,19 @@ public class BikinFragment extends Fragment {
             }
         }
         if (!lanjut) {
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp");
-            fileapk = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/NamaToko.apk");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/un");
-            fileco = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/co");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/AndroidManifest.xml");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/keystore.jks");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/ico.png");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/1.tmp");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/2.tmp");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/3.tmp");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/4.tmp");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/5.tmp");
-            file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/tmp.tmp");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp");
+            fileapk = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/NamaToko.apk");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/un");
+            fileco = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/co");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/AndroidManifestt.xml");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/keystore.jks");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/ico.png");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/1.tmp");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/2.tmp");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/3.tmp");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/4.tmp");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/5.tmp");
+            file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/tmp.tmp");
             fileapk.renameTo(file);
             file.renameTo(file);
             file.renameTo(file);
@@ -814,7 +843,7 @@ public class BikinFragment extends Fragment {
 
     public void writeToFile(String data) {
 
-        final File file = new File(Environment.getExternalStorageDirectory() + "/WARGAMANDIRI/tmp/data_login.json");
+        final File file = new File(Environment.getExternalStorageDirectory() + "/aplikasimandiri/tmp/data_login.json");
         Log.d("TAG", "writeToFile: " + file.getName());
         // Save your stream, don't forget to flush() it before closing it.
 

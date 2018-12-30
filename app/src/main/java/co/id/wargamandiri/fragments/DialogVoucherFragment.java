@@ -30,8 +30,10 @@ import co.id.wargamandiri.models.DataItemVoucher;
 import co.id.wargamandiri.models.UploadBannerResponse;
 import co.id.wargamandiri.models.UploadVoucherResponse;
 import co.id.wargamandiri.utils.CommonUtil;
+import co.id.wargamandiri.utils.Session;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.VOUCHER;
+import static co.id.wargamandiri.data.Constans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +66,9 @@ public class DialogVoucherFragment extends DialogFragment {
     private String path;
     private File file;
     private int id_pengumuman;
+    private Session session;
+
+    boolean edit = false;
 
     public void setOnCallbackResult(final CallbackResult callbackResult) {
         this.callbackResult = callbackResult;
@@ -91,6 +96,7 @@ public class DialogVoucherFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_voucher, container, false);
         unbinder = ButterKnife.bind(this, view);
+        session = new Session(getActivity());
         if (getArguments() != null) {
 //            etJudul.setText(getArguments().getString("judul"));
             id_pengumuman = getArguments().getInt("id_pengumuman");
@@ -112,9 +118,9 @@ public class DialogVoucherFragment extends DialogFragment {
                 break;
             case R.id.bt_save:
                 if (getArguments() != null) {
-                    editPengumuman();
+                    edit();
                 } else {
-                    uploadPengumuman();
+                    upload();
                 }
                 break;
             case R.id.et_tanggal_awal:
@@ -126,9 +132,9 @@ public class DialogVoucherFragment extends DialogFragment {
         }
     }
 
-    private void uploadPengumuman() {
+    private void upload() {
         openDialog();
-        AndroidNetworking.post(WEB_URL + "api/master/voucher")
+        AndroidNetworking.post(VOUCHER)
                 .addBodyParameter(getVoucherUpload())
                 .build()
                 .getAsObject(UploadVoucherResponse.class, new ParsedRequestListener() {
@@ -136,7 +142,7 @@ public class DialogVoucherFragment extends DialogFragment {
                     public void onResponse(Object response) {
                         closeDialog();
                         if (response instanceof UploadVoucherResponse) {
-                            callbackResult.sendResult(((UploadVoucherResponse) response).getData());
+                            callbackResult.sendResult();
                             dismiss();
                         }
                     }
@@ -149,7 +155,7 @@ public class DialogVoucherFragment extends DialogFragment {
                 });
     }
 
-    private void editPengumuman() {
+    private void edit() {
         openDialog();
         AndroidNetworking.put(WEB_URL + "api/master/pengumuman/{id_pengumuman}")
                 .addPathParameter("id_pengumuman", String.valueOf(id_pengumuman))
@@ -159,7 +165,7 @@ public class DialogVoucherFragment extends DialogFragment {
                     public void onResponse(Object response) {
                         closeDialog();
                         if (response instanceof UploadBannerResponse) {
-                            callbackResult.sendResult(((UploadBannerResponse) response).getData());
+                            callbackResult.sendResult();
                             dismiss();
                         }
                     }
@@ -183,18 +189,18 @@ public class DialogVoucherFragment extends DialogFragment {
     }
 
     public DataItemVoucher getVoucherUpload() {
-        DataItemVoucher dataItemBanner = new DataItemVoucher();
-        dataItemBanner.setIdToko(1);
-        dataItemBanner.setKodeVoucher(etKode.getText().toString());
-        dataItemBanner.setStartAt(etTanggalAwal.getText().toString());
-        dataItemBanner.setExpireAt(etTanggalAkhir.getText().toString());
-        dataItemBanner.setMinimalBelanja(Integer.parseInt(etMinimalBelanja.getText().toString()));
-        dataItemBanner.setJumlahPotongan(Integer.parseInt(etJumlahPotongan.getText().toString()));
-        dataItemBanner.setPersen(null);
-        return dataItemBanner;
+        DataItemVoucher voucher = new DataItemVoucher();
+        voucher.setIdToko(session.getUser().getData().getIdToko());
+        voucher.setKodeVoucher(etKode.getText().toString());
+        voucher.setTanggal_awal(etTanggalAwal.getText().toString());
+        voucher.setTanggal_akhir(etTanggalAkhir.getText().toString());
+        voucher.setMinimalBelanja(Integer.parseInt(etMinimalBelanja.getText().toString()));
+        voucher.setJumlahPotongan(Integer.parseInt(etJumlahPotongan.getText().toString()));
+        voucher.setPersen(null);
+        return voucher;
     }
 
     public interface CallbackResult {
-        void sendResult(Object obj);
+        void sendResult();
     }
 }

@@ -9,6 +9,19 @@
     <color name="white">@android:color/white</color>
     <color name="black_de">#000000</color>
 
+    <color name="white_hint_text_disabled">#4DFFFFFF</color>
+    <color name="white_primary_text">#FFF</color>
+    <color name="white_secondary_text">#B3FFFFFF</color>
+    <color name="black_hint_text_disabled">#42000000</color>
+    <color name="black_primary_text">#de000000</color>
+    <color name="black_secondary_text">#8a000000</color>
+    <color name="color_divider">#1E000000</color>
+    <color name="translucent_grey">#0c000000</color>
+    <color name="buildmlearn_blue_translucent">#663479c4</color>
+    <color name="simulator_action_bar">#AA181818</color>
+    <color name="quiz_correct_answer">#43A047</color>
+
+
 
     //color transparant
     <color name="transparent_white_5">#0Dffffff</color>

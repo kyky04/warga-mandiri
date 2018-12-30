@@ -27,77 +27,68 @@
                 android:layout_width="160dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_xxxlarge"
-                android:src="@drawable/logo" />
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_sans_regular"
+                android:text="APLIKASI MANDIRI"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:text="SILAHKAN LOGIN"
+                android:fontFamily="@font/nunito_sans_regular"
+                android:text="LOGIN"
                 android:textAlignment="center"
+                android:textColor="@color/red_500"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/img"
-                android:layout_marginTop="@dimen/spacing_medium">
+                android:layout_marginTop="@dimen/spacing_large">
 
-
-                <LinearLayout
+                <EditText
+                    android:id="@+id/et_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:showDividers="middle">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/spacing_medium">
-
-                        <EditText
-                            android:id="@+id/et_username"
-                            fontPath="fonts/open_sans.ttf"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            android:hint="@string/username"
-                            android:padding="@dimen/spacing_medium" />
+                    android:background="@drawable/btn_rounded"
+                    android:backgroundTint="@color/grey_200"
+                    android:fontFamily="@font/nunito_sans_regular"
+                    android:hint="Email"
+                    android:paddingLeft="@dimen/spacing_large"
+                    android:paddingRight="@dimen/spacing_large" />
 
 
-                    </android.support.design.widget.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleEnabled="true">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/line"
-                        android:background="@color/grey_500" />
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_rounded"
+                    android:backgroundTint="@color/grey_200"
+                    android:fontFamily="@font/nunito_sans_regular"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:paddingLeft="@dimen/spacing_large"
+                    android:paddingRight="@dimen/spacing_large" />
 
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/spacing_medium"
-                        app:passwordToggleEnabled="true">
+            </android.support.design.widget.TextInputLayout>
 
-                        <EditText
-                            android:id="@+id/et_password"
-                            fontPath="fonts/open_sans.ttf"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            android:hint="@string/password"
-                            android:inputType="textPassword"
-                            android:padding="@dimen/spacing_medium" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_small"
                     android:layout_weight="1"
-                    android:background="@color/teal_A700"
+                    android:background="@drawable/btn_rounded_red"
                     android:text="MASUK"
                     android:textAllCaps="true"
                     android:textColor="@color/white" />
@@ -130,18 +121,32 @@
                         android:id="@+id/blm_pnya_akun"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Belum punya akun, silahkan " />
+                        android:layout_centerInParent="true"
+                        android:text="Belum punya akun? " />
 
                     <TextView
                         android:id="@+id/tv_register"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:layout_marginRight="@dimen/spacing_large"
                         android:layout_toRightOf="@+id/blm_pnya_akun"
+                        android:fontFamily="@font/nunito_sans_bold"
                         android:text="REGISTER"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textStyle="bold" />
+                        android:textColor="@color/red_500" />
                 </RelativeLayout>
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:id="@+id/tv_reset_pass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:layout_toRightOf="@+id/blm_pnya_akun"
+                    android:fontFamily="@font/nunito_sans_bold"
+                    android:text="RESET PASSWORD"
+                    android:textColor="@color/red_500" />
 
 
             </LinearLayout>

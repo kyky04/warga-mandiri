@@ -1,35 +1,30 @@
 package co.id.wargamandiri.utils;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.MenuItem;
+import android.support.annotation.DrawableRes;
+import android.support.v4.widget.NestedScrollView;
+import android.util.TypedValue;
+import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 
-import java.io.File;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,32 +32,7 @@ import co.id.wargamandiri.R;
 
 public class Tools {
 
-    public static boolean needRequestPermission() {
-        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
-    }
-
-    public static void setSystemBarColor(Activity act, int color) {
-        if (isLolipopOrHigher()) {
-            Window window = act.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(color);
-        }
-    }
-
-    public static void setSystemBarColor(Activity act, String color) {
-        setSystemBarColor(act, Color.parseColor(color));
-    }
-
-    public static void setSystemBarColorDarker(Activity act, String color) {
-        setSystemBarColor(act, colorDarker(Color.parseColor(color)));
-    }
-
-    public static boolean isLolipopOrHigher() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
-    }
-
-    public static void systemBarLolipop(Activity act) {
+    public static void setSystemBarColor(Activity act) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = act.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -71,194 +41,184 @@ public class Tools {
         }
     }
 
-    public static void rateAction(Activity activity) {
-        Uri uri = Uri.parse("market://details?id=" + activity.getPackageName());
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-        try {
-            activity.startActivity(goToMarket);
-        } catch (ActivityNotFoundException e) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + activity.getPackageName())));
+    public static void setSystemBarColor(Activity act, @ColorRes int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = act.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(act.getResources().getColor(color));
         }
     }
-
-//    public static void showDialogAbout(Activity activity) {
-//        Dialog dialog = new DialogUtils(activity).buildDialogInfo(R.string.title_about, R.string.content_about, R.string.OK, R.drawable.img_about, new CallbackDialog() {
-//            @Override
-//            public void onPositiveClick(Dialog dialog) {
-//                dialog.dismiss();
-//            }
-//
-//            @Override
-//            public void onNegativeClick(Dialog dialog) {
-//            }
-//        });
-//        dialog.show();
-//    }
 
     /**
-     * For device info parameters
+     * Making notification bar transparent
      */
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return model;
-        } else {
-            return manufacturer + " " + model;
+    public static void setSystemBarTransparent(Activity act) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = act.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
 
-    public static String getAndroidVersion() {
-        return Build.VERSION.RELEASE + "";
-    }
-
-    public static int getVersionCode(Context ctx) {
+    public static void displayImageOriginal(Context ctx, ImageView img, @DrawableRes int drawable) {
         try {
-            PackageManager manager = ctx.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(ctx.getPackageName(), 0);
-            return info.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            return -1;
+            Glide.with(ctx).load(drawable)
+                    .into(img);
+        } catch (Exception e) {
         }
     }
 
-//    public static String getVersionNamePlain(Context ctx) {
+    public static void displayImageRound(final Context ctx, final ImageView img, @DrawableRes int drawable) {
 //        try {
-//            PackageManager manager = ctx.getPackageManager();
-//            PackageInfo info = manager.getPackageInfo(ctx.getPackageName(), 0);
-//            return info.versionName;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            return ctx.getString(R.string.version_unknown);
+//            Glide.with(ctx).load(drawable).into(new BitmapImageViewTarget(img) {
+//                @Override
+//                protected void setResource(Bitmap resource) {
+//                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(ctx.getResources(), resource);
+//                    circularBitmapDrawable.setCircular(true);
+//                    img.setImageDrawable(circularBitmapDrawable);
+//                }
+//            });
+//        } catch (Exception e) {
 //        }
-//    }
+    }
 
-    public static String getFormattedDate(Long dateTime) {
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy hh:mm");
-        return newFormat.format(new Date(dateTime));
+    public static void displayImageOriginal(Context ctx, ImageView img, String url) {
+        try {
+            Glide.with(ctx).load(url)
+                    .into(img);
+        } catch (Exception e) {
+        }
     }
 
     public static String getFormattedDateSimple(Long dateTime) {
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
         return newFormat.format(new Date(dateTime));
     }
 
-//    public static void displayImageOriginal(Context ctx, ImageView img, String url) {
-//        try {
-//            Glide.with(ctx).load(url)
-//                    .crossFade()
-//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .into(img);
-//        } catch (Exception e) {
-//        }
-//    }
-//
-//    public static void displayImageThumbnail(Context ctx, ImageView img, String url, float thumb) {
-//        try {
-//            Glide.with(ctx).load(url)
-//                    .crossFade()
-//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .thumbnail(thumb)
-//                    .into(img);
-//        } catch (Exception e) {
-//
-//        }
-//
-//    }
-
-
-    public static int colorDarker(int color) {
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[2] *= 0.9f; // value component
-        return Color.HSVToColor(hsv);
+    public static String getFormattedDateEvent(Long dateTime) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("EEE, MMM dd yyyy");
+        return newFormat.format(new Date(dateTime));
     }
 
-    public static int colorBrighter(int color) {
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[2] /= 0.8f; // value component
-        return Color.HSVToColor(hsv);
+    public static String getFormattedTimeEvent(Long time) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("h:mm a");
+        return newFormat.format(new Date(time));
     }
 
-    public static int getGridSpanCount(Activity activity) {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
-        float screenWidth = displayMetrics.widthPixels;
-        float cellWidth = activity.getResources().getDimension(R.dimen.item_product_width);
-        return Math.round(screenWidth / cellWidth);
-    }
-
-    public static int getFeaturedNewsImageHeight(Activity activity) {
-        float w_ratio = 2, h_ratio = 1; // we use 2:1 ratio
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
-        float screenWidth = displayMetrics.widthPixels - 10;
-        float resHeight = (screenWidth * h_ratio) / w_ratio;
-        return Math.round(resHeight);
-    }
-
-    public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {
-        Drawable normalDrawable = item.getIcon();
-        Drawable wrapDrawable = DrawableCompat.wrap(normalDrawable);
-        DrawableCompat.setTint(wrapDrawable, context.getResources().getColor(color));
-
-        item.setIcon(wrapDrawable);
-    }
-
-    public static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    public static Bitmap getBitmap(File file) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-    }
-
-//    public static String getVersionName(Context ctx) {
-//        try {
-//            PackageManager manager = ctx.getPackageManager();
-//            PackageInfo info = manager.getPackageInfo(ctx.getPackageName(), 0);
-//            return ctx.getString(R.string.app_version) + " " + info.versionName;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            return ctx.getString(R.string.version_unknown);
-//        }
-//    }
-//
-//    public static void copyToClipboard(Context context, String data) {
-//        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//        ClipData clip = ClipData.newPlainText("clipboard", data);
-//        clipboard.setPrimaryClip(clip);
-//        Toast.makeText(context, R.string.msg_copied_clipboard, Toast.LENGTH_SHORT).show();
-//    }
-//
-    public static String getFormattedPrice(Double price, Context ctx) {
-        NumberFormat format = NumberFormat.getInstance(AppConfig.PRICE_LOCAL_FORMAT);
-        String result = format.format(price);
-
-        if (!AppConfig.PRICE_WITH_DECIMAL) {
-            result = format.format(price.longValue());
+    public static String getEmailFromName(String name) {
+        if (name != null && !name.equals("")) {
+            String email = name.replaceAll(" ", ".").toLowerCase().concat("@mail.com");
+            return email;
         }
-
-//        if (AppConfig.PRICE_CURRENCY_IN_END) {
-//            result = result + " " + sharedPref.getInfoData().currency;
-//        } else {
-//            result = sharedPref.getInfoData().currency + " " + result;
-//        }
-        return result;
+        return name;
     }
 
-    public static String getDeviceID(Context context) {
-        String deviceID = Build.SERIAL;
-        if (deviceID == null || deviceID.trim().isEmpty() || deviceID.equals("unknown")) {
-            try {
-                deviceID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            } catch (Exception e) {
+    public static int dpToPx(Context c, int dp) {
+        Resources r = c.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+
+
+    public static void copyToClipboard(Context context, String data) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("clipboard", data);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void nestedScrollTo(final NestedScrollView nested, final View targetView) {
+        nested.post(new Runnable() {
+            @Override
+            public void run() {
+                nested.scrollTo(500, targetView.getBottom());
             }
+        });
+    }
+
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
+    public static boolean toggleArrow(View view) {
+        if (view.getRotation() == 0) {
+            view.animate().setDuration(200).rotation(180);
+            return true;
+        } else {
+            view.animate().setDuration(200).rotation(0);
+            return false;
         }
-        return deviceID;
+    }
+
+    public static boolean toggleArrow(boolean show, View view) {
+        return toggleArrow(show, view, true);
+    }
+
+    public static boolean toggleArrow(boolean show, View view, boolean delay) {
+        if (show) {
+            view.animate().setDuration(delay ? 200 : 0).rotation(180);
+            return true;
+        } else {
+            view.animate().setDuration(delay ? 200 : 0).rotation(0);
+            return false;
+        }
+    }
+
+
+    public static void changeMenuIconColor(Menu menu, @ColorInt int color) {
+        for (int i = 0; i < menu.size(); i++) {
+            Drawable drawable = menu.getItem(i).getIcon();
+            if (drawable == null) continue;
+            drawable.mutate();
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+    public static String toCamelCase(String input) {
+        input = input.toLowerCase();
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
+    }
+
+    public static String getFormattedPriceIndonesia(Double price) {
+        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+
+        formatRp.setCurrencySymbol("Rp. ");
+        formatRp.setMonetaryDecimalSeparator(',');
+        formatRp.setGroupingSeparator('.');
+
+        kursIndonesia.setDecimalFormatSymbols(formatRp);
+        String result = kursIndonesia.format(price);
+        return result;
     }
 
 }

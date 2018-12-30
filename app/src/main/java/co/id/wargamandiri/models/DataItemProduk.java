@@ -1,11 +1,12 @@
 package co.id.wargamandiri.models;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class DataItemProduk {
+public class DataItemProduk implements Serializable {
 
-	@SerializedName("image")
+	@SerializedName("gambar")
 	private List<ImageItem> image;
 
 	@SerializedName("gambar_utama")
@@ -18,7 +19,7 @@ public class DataItemProduk {
 	private String createdAt;
 
 	@SerializedName("kategori")
-	private List<KategoriItem> kategori;
+	private DataItemKategori kategori;
 
 	@SerializedName("stok")
 	private int stok;
@@ -82,11 +83,11 @@ public class DataItemProduk {
 		return createdAt;
 	}
 
-	public void setKategori(List<KategoriItem> kategori){
+	public void setKategori(DataItemKategori kategori){
 		this.kategori = kategori;
 	}
 
-	public List<KategoriItem> getKategori(){
+	public DataItemKategori getKategori(){
 		return kategori;
 	}
 

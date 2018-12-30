@@ -1,24 +1,37 @@
 apply plugin: 'com.android.application'
-
-
-apply plugin: 'realm-android'
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "co.id.wargamandiri"
-        minSdkVersion 15
-        targetSdkVersion 26
+        minSdkVersion 17
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        manifestPlaceholders = [
+                onesignal_app_id: '49ec85be-81b0-434c-a295-7d6da73f020d',
+                // Project number pulled from dashboard, local value is ignored.
+                onesignal_google_project_number: 'REMOTE'
+        ]
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             signingConfig getSigningConfig()
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dexOptions {
+        preDexLibraries = false
+    }
+    configurations.all {
+        resolutionStrategy {
+            force 'com.android.support:support-v4:27.0.2'
         }
     }
 }
@@ -26,34 +39,49 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.android.support:cardview-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation 'com.android.support:support-v4:26.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.android.support:cardview-v7:26.0.1'
-    implementation 'com.android.support:design:26.0.1'
-    implementation 'com.android.support:recyclerview-v7:26.0.1'
     implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+//    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.karumi:dexter:4.2.0'
     implementation 'com.github.esafirm.android-image-picker:imagepicker:1.12.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.1'
-    implementation 'org.parceler:parceler-api:1.1.10'
-    annotationProcessor 'org.parceler:parceler:1.1.10'
+    implementation 'com.google.firebase:firebase-auth:11.0.4'
+    implementation 'com.onesignal:OneSignal:[3.9.1, 3.99.99]'
+    implementation 'com.google.gms:google-services:4.1.0'
+//    implementation 'org.parceler:parceler-api:1.1.10'
+//    annotationProcessor 'org.parceler:parceler:1.1.10'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'com.amitshekhar.android:rx2-android-networking:1.0.1'
-    implementation files('libs/zipsigner-lib-1.17.jar')
-    implementation files('libs/dexlib.jar')
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation files('libs/prov-1.58.0.0.jar')
+//    implementation 'com.amitshekhar.android:rx2-android-networking:1.0.1'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    implementation 'com.google.firebase:firebase-messaging:12.0.1'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+
+//    implementation files('libs/dexlib.jar')
+    implementation files('libs/zipsigner-lib-1.17.jar')
+    implementation files('libs/zipsigner-lib-optional-1.16.jar')
+    implementation files('libs/kellinwood-logging-android-1.4.jar')
+    implementation files('libs/kellinwood-logging-lib-1.1.jar')
+    implementation files('libs/kellinwood-logging-log4j-1.0.jar')
+    implementation files('libs/axml.jar')
+    implementation files('libs/pkix-1.51.0.0.jar')
+    implementation files('libs/core-1.51.0.0.jar')
+    implementation files('libs/prov-1.51.0.0.jar')
+    implementation files('libs/zipio-lib-1.8.jar')
 }
+

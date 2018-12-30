@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_window"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <TextView
+        android:drawableLeft="@drawable/ic_save"
+        android:id="@+id/txt_save_apk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/touch_selector_white"
+        android:clickable="true"
+        android:drawablePadding="24dp"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="Save Apk"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/black_primary_text"
+        android:textStyle="bold"
+         />
+
+
+    <TextView
+        android:drawableLeft="@drawable/ic_share"
+        android:id="@+id/txt_share_apk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/touch_selector_white"
+        android:clickable="true"
+        android:drawablePadding="24dp"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="Share Apk"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/black_primary_text"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

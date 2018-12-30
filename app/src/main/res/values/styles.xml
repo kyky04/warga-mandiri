@@ -1,11 +1,12 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
+    <!-- Base MyApp theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:typeface">serif</item>
     </style>
 
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -23,6 +24,62 @@
     <style name="ToolbarHomeStyle" parent="@style/AppTheme">
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
         <item name="popupMenuStyle">@style/PopupMenu</item>
+    </style>
+
+    <style name="Toolbar.Buildmlearn" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="TextView.Empty" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black_de</item>
+        <item name="android:textSize">@dimen/empty</item>
+    </style>
+
+    <style name="EditText.Dark">
+        <item name="android:textColor" tools:ignore="PrivateResource">
+            @color/abc_primary_text_material_dark
+        </item>
+        <item name="colorControlNormal">@color/white_hint_text_disabled</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/white_hint_text_disabled</item>
+    </style>
+
+    <style name="EditText.Light">
+        <item name="android:textColor" tools:ignore="PrivateResource">
+            @color/abc_primary_text_material_dark
+        </item>
+        <item name="colorControlNormal">@color/white_hint_text_disabled</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/white_hint_text_disabled</item>
+    </style>
+
+    <style name="EditText" />
+
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/black_primary_text</item>
+        <item name="android:textColorSecondary">@color/black_secondary_text</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/white_primary_text</item>
+    </style>
+
+    <style name="MaterialDialogSheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>
+        <item name="android:textColor">@color/black_primary_text</item>
+    </style>
+
+    <style name="MaterialDialogSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide</item>
     </style>
 
 

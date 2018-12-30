@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -29,6 +30,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,127 +61,131 @@ public class CommonUtil {
 
     static Gson gson;
 
-static {
+    static {
         if (gson == null)
-        gson = new GsonBuilder()
-        .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory())
-        .setExclusionStrategies()
-        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-        .create();
-        }
+            gson = new GsonBuilder()
+                    .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory())
+                    .setExclusionStrategies()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                    .create();
+    }
 
-public static final String md5(final String s) {
-final String MD5 = "MD5";
+    public static final String md5(final String s) {
+        final String MD5 = "MD5";
         try {
-        // Create MD5 Hash
-        MessageDigest digest = MessageDigest
-        .getInstance(MD5);
-        digest.update(s.getBytes());
-        byte messageDigest[] = digest.digest();
+            // Create MD5 Hash
+            MessageDigest digest = MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
 
-        // Create Hex String
-        StringBuilder hexString = new StringBuilder();
-        for (byte aMessageDigest : messageDigest) {
-        String h = Integer.toHexString(0xFF & aMessageDigest);
-        while (h.length() < 2)
-        h = "0" + h;
-        hexString.append(h);
-        }
-        return hexString.toString();
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
 
         } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
         return "";
-        }
+    }
 
-public static String getCurrentDate() {
+    public static String getCurrentDate() {
         return getCurrentDate("yyyy-MM-dd");
-        }
+    }
 
-public static void fireNotif(final Activity context, String title, String message) {
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void fireNotif(final Activity context, String title, String message) {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("" + title);
         builder.setMessage("" + message);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-@Override
-public void onClick(DialogInterface dialog, int which) {
-        dialog.cancel();
-        }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
         });
         AlertDialog alert = builder.create();
         alert.show();
-        }
+    }
 
-public static Snackbar fireNotifSnackbar(final Activity context, ViewGroup containerLayout, String message, boolean infinite) {
-final Snackbar snackbar = Snackbar.make(containerLayout, message, infinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_LONG);
+    public static Snackbar fireNotifSnackbar(final Activity context, ViewGroup containerLayout, String message, boolean infinite) {
+        final Snackbar snackbar = Snackbar.make(containerLayout, message, infinite ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_LONG);
         snackbar.setAction("Tutup", new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        snackbar.dismiss();
-        }
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
         });
         snackbar.setActionTextColor(context.getResources().getColor(R.color.colorPrimary)).show();
         return snackbar;
-        }
+    }
 
-public static String getCurrentDate(String fmt) {
+    public static String getCurrentDate(String fmt) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("Asia/Jakarta"));
         SimpleDateFormat format = new SimpleDateFormat(fmt);
 //        Date date = new Date();
         return format.format(cal.getTime());
-        }
+    }
 
-// Storage Permissions
-public static final int REQUEST_EXTERNAL_STORAGE = 1;
-public static final int REQUEST_LOCATION_PERMISSION = 2;
-private static String[] PERMISSIONS_STORAGE = {
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
+    // Storage Permissions
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final int REQUEST_LOCATION_PERMISSION = 2;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
-@TargetApi(Build.VERSION_CODES.M)
-public static boolean verifyPermission(Context activity, String permissionCode) {
+    @TargetApi(Build.VERSION_CODES.M)
+    public static boolean verifyPermission(Context activity, String permissionCode) {
         if (ContextCompat.checkSelfPermission(activity, permissionCode) == PackageManager.PERMISSION_GRANTED) {
-        return true;
+            return true;
         }
         return false;
-        }
+    }
 
-public static Snackbar fireNotifSnackbar(Activity activity, ViewGroup layout, String message) {
+    public static Snackbar fireNotifSnackbar(Activity activity, ViewGroup layout, String message) {
         return fireNotifSnackbar(activity, layout, message, true);
-        }
-
-private static class NullStringToEmptyAdapterFactory implements TypeAdapterFactory {
-    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-
-        Class<T> rawType = (Class<T>) type.getRawType();
-        if (rawType != String.class) {
-            return null;
-        }
-        return (TypeAdapter<T>) new StringAdapter();
     }
 
-    class StringAdapter extends TypeAdapter<String> {
-        public String read(JsonReader reader) throws IOException {
-            if (reader.peek() == JsonToken.NULL) {
-                reader.nextNull();
-                return "";
+    private static class NullStringToEmptyAdapterFactory implements TypeAdapterFactory {
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+
+            Class<T> rawType = (Class<T>) type.getRawType();
+            if (rawType != String.class) {
+                return null;
             }
-            return reader.nextString();
+            return (TypeAdapter<T>) new StringAdapter();
         }
 
-        public void write(JsonWriter writer, String value) throws IOException {
-            if (value == null) {
-                writer.nullValue();
-                return;
+        class StringAdapter extends TypeAdapter<String> {
+            public String read(JsonReader reader) throws IOException {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.nextNull();
+                    return "";
+                }
+                return reader.nextString();
             }
-            writer.value(value);
+
+            public void write(JsonWriter writer, String value) throws IOException {
+                if (value == null) {
+                    writer.nullValue();
+                    return;
+                }
+                writer.value(value);
+            }
         }
     }
-}
 
     public static String toJson(Object obj) {
         return gson.toJson(obj);
@@ -250,7 +256,7 @@ private static class NullStringToEmptyAdapterFactory implements TypeAdapterFacto
         progressDialog.dismiss();
     }
 
-    public static void showSnfackMessage(View v, String message, int duration) {
+    public static void showSnackMessage(View v, String message, int duration) {
         Snackbar snackbar = Snackbar.make(v, message, duration);
         snackbar.show();
     }
@@ -326,8 +332,7 @@ private static class NullStringToEmptyAdapterFactory implements TypeAdapterFacto
     }
 
 
-
-    public static void failure(final Activity context,String message) {
+    public static void failure(final Activity context, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(message);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -340,10 +345,10 @@ private static class NullStringToEmptyAdapterFactory implements TypeAdapterFacto
         dialog.show();
     }
 
-    public static void succesInput(final Activity context, String message,DialogInterface.OnClickListener onClickListener) {
+    public static void succesInput(final Activity context, String message, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(message);
-        builder.setPositiveButton("Ok",onClickListener);
+        builder.setPositiveButton("Ok", onClickListener);
         AlertDialog dialog = builder.create();
         dialog.setCancelable(false);
         dialog.show();
@@ -405,7 +410,7 @@ private static class NullStringToEmptyAdapterFactory implements TypeAdapterFacto
         return tglKlaim;
     }
 
-    public static String formatDateIndonesia(String date){
+    public static String formatDateIndonesia(String date) {
         SimpleDateFormat formatIncoming = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
         SimpleDateFormat formatOutgoing = new SimpleDateFormat("MMMM dd, yyyy");
         TimeZone tz = TimeZone.getTimeZone("Asia/Jakarta");
@@ -424,7 +429,7 @@ private static class NullStringToEmptyAdapterFactory implements TypeAdapterFacto
 
 
     public static void dialogTanggal(Context context, final EditText etDate) {
-        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy",Locale.ENGLISH);
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         TimeZone tz = TimeZone.getTimeZone("Asia/Jakarta");
         dateFormat.setTimeZone(tz);
         Calendar newCalendar = Calendar.getInstance();
@@ -483,5 +488,14 @@ private static class NullStringToEmptyAdapterFactory implements TypeAdapterFacto
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static void dialogArray(Context context, final String[] items, DialogInterface.OnClickListener clickListener) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context)
+//                .setTitle("Organization Type")
+                .setItems(items, clickListener);
+
+        Dialog dialog = builder.create();
+        dialog.show();
     }
 }

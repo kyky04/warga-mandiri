@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataItemVoucher {
 
-	@SerializedName("jumlah_potongan")
+	@SerializedName("potongan")
 	private int jumlahPotongan;
 
 	@SerializedName("minimal_belanja")
@@ -13,7 +13,7 @@ public class DataItemVoucher {
 	@SerializedName("updated_at")
 	private String updatedAt;
 
-	@SerializedName("kode_voucher")
+	@SerializedName("kode")
 	private String kodeVoucher;
 
 	@SerializedName("id_toko")
@@ -25,14 +25,14 @@ public class DataItemVoucher {
 	@SerializedName("created_at")
 	private String createdAt;
 
-	@SerializedName("expire_at")
-	private String expireAt;
+	@SerializedName("tanggal_akhir")
+	private String tanggal_akhir;
 
 	@SerializedName("id")
 	private int id;
 
-	@SerializedName("start_at")
-	private String startAt;
+	@SerializedName("tanggal_awal")
+	private String tanggal_awal;
 
 	@SerializedName("persen")
 	private String persen;
@@ -96,12 +96,12 @@ public class DataItemVoucher {
 		return createdAt;
 	}
 
-	public void setExpireAt(String expireAt){
-		this.expireAt = expireAt;
+	public void setTanggal_akhir(String tanggal_akhir){
+		this.tanggal_akhir = tanggal_akhir;
 	}
 
-	public String getExpireAt(){
-		return expireAt;
+	public String getTanggal_akhir(){
+		return tanggal_akhir;
 	}
 
 	public void setId(int id){
@@ -112,12 +112,12 @@ public class DataItemVoucher {
 		return id;
 	}
 
-	public void setStartAt(String startAt){
-		this.startAt = startAt;
+	public void setTanggal_awal(String tanggal_awal){
+		this.tanggal_awal = tanggal_awal;
 	}
 
-	public String getStartAt(){
-		return startAt;
+	public String getTanggal_awal(){
+		return tanggal_awal;
 	}
 
 	public void setPersen(String persen){
@@ -147,9 +147,9 @@ public class DataItemVoucher {
 			",id_toko = '" + idToko + '\'' + 
 			",updated_by = '" + updatedBy + '\'' + 
 			",created_at = '" + createdAt + '\'' + 
-			",expire_at = '" + expireAt + '\'' + 
+			",expire_at = '" + tanggal_akhir + '\'' +
 			",id = '" + id + '\'' + 
-			",start_at = '" + startAt + '\'' + 
+			",start_at = '" + tanggal_awal + '\'' +
 			",persen = '" + persen + '\'' + 
 			",created_by = '" + createdBy + '\'' + 
 			"}";

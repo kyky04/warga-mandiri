@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,13 +33,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterKategori;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.KategoriAdapter;
 import co.id.wargamandiri.models.DataItemKategori;
-import co.id.wargamandiri.models.DataItemPengumuman;
 import co.id.wargamandiri.models.KategoriResponse;
 import co.id.wargamandiri.utils.Session;
+import co.id.wargamandiri.utils.Tools;
+import co.id.wargamandiri.views.SpacingItemDecoration;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.KATEGORI;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,17 +49,17 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class MasterKetegoriFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
     @BindView(R.id.fab_add_banner)
     FloatingActionButton fabAddBanner;
     Unbinder unbinder;
 
-    AdapterKategori adapterBanner;
+    KategoriAdapter adapter;
 
-    Session session;
+    Session session ;
 
     public MasterKetegoriFragment() {
         // Required empty public constructor
@@ -70,11 +73,13 @@ public class MasterKetegoriFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kelola, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        session = new Session(getActivity());
 
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterKategori(getActivity());
+
+        adapter = new KategoriAdapter(getActivity());
+        recyclerView.setAdapter(new EmptyAdapter(getActivity()));
         getKategori();
-        rvBanner.setAdapter(adapterBanner);
+
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -82,15 +87,20 @@ public class MasterKetegoriFragment extends Fragment {
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterKategori.OnItemClick() {
+        adapter.setOnItemClickListener(new KategoriAdapter.OnItemClickListener() {
             @Override
-            public void onItemEditClick(int pos, DataItemKategori dataItemBanner) {
-//                showEditDialogFullscreen(dataItemBanner);
+            public void onItemClick(int position) {
+
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemKategori dataItemBanner) {
-                deleteBanner(dataItemBanner.getId());
+            public void onItemEdit(int position) {
+                editData(adapter.getItem(position));
+            }
+
+            @Override
+            public void onItemDelete(int position) {
+                delete(adapter.getItem(position).getId());
             }
         });
         return view;
@@ -104,20 +114,33 @@ public class MasterKetegoriFragment extends Fragment {
 
     @OnClick(R.id.fab_add_banner)
     public void onViewClicked() {
-        showDialogFullscreen();
+        addData();
     }
 
     private void getKategori() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/master/kategori")
+        AndroidNetworking.get(KATEGORI)
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
                 .build()
                 .getAsObject(KategoriResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
                         if (response instanceof KategoriResponse) {
-                            adapterBanner.swap(((KategoriResponse) response).getData());
+                            if(((KategoriResponse) response).getData().size() > 0){
+                                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                                recyclerView.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(getActivity(), 8), true));
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setNestedScrollingEnabled(false);
+
+                                adapter.swap(((KategoriResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            }else {
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
                         }
+
                     }
 
                     @Override
@@ -139,7 +162,7 @@ public class MasterKetegoriFragment extends Fragment {
     }
 
 
-    private void showDialogFullscreen() {
+    private void addData() {
         FragmentManager fragmentManager = getFragmentManager();
         DialogKategoriFragment newFragment = new DialogKategoriFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -153,13 +176,13 @@ public class MasterKetegoriFragment extends Fragment {
         });
     }
 
-    private void showEditDialogFullscreen(DataItemPengumuman itemPengumuman) {
+    private void editData(DataItemKategori item) {
         FragmentManager fragmentManager = getFragmentManager();
-        DialogPengumumanFragment newFragment = DialogPengumumanFragment.newInstance(itemPengumuman);
+        DialogKategoriFragment newFragment = DialogKategoriFragment.newInstance(item);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
-        newFragment.setOnCallbackResult(new DialogPengumumanFragment.CallbackResult() {
+        newFragment.setOnCallbackResult(new DialogKategoriFragment.CallbackResult() {
             @Override
             public void sendResult(Object obj) {
                 getKategori();
@@ -167,14 +190,14 @@ public class MasterKetegoriFragment extends Fragment {
         });
     }
 
-    private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(WEB_URL + "api/master/kategori/{id_kategori}")
-                .addPathParameter("id_kategori", String.valueOf(id_banner))
+    private void delete(int id) {
+        AndroidNetworking.delete(KATEGORI + "/{id}")
+                .addPathParameter("id", String.valueOf(id))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "DataItemPengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
                         getKategori();
                     }
 

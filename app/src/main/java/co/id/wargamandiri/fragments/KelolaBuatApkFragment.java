@@ -41,13 +41,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterBanner;
+import co.id.wargamandiri.adapter.SliderAdapter;
 import co.id.wargamandiri.models.BannerResponse;
-import co.id.wargamandiri.models.DataItemBanner;
 import co.id.wargamandiri.utils.Session;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.WEB_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +54,7 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class KelolaBuatApkFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
+    @BindView(R.id.recycler)
     RecyclerView rvBanner;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
@@ -63,7 +62,7 @@ public class KelolaBuatApkFragment extends Fragment {
     FloatingActionButton fabAddBanner;
     Unbinder unbinder;
 
-    AdapterBanner adapterBanner;
+    SliderAdapter adapterBanner;
 
     Session session;
 
@@ -81,7 +80,7 @@ public class KelolaBuatApkFragment extends Fragment {
 
 
         rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterBanner(getActivity());
+        adapterBanner = new SliderAdapter(getActivity());
         getBanner();
         rvBanner.setAdapter(adapterBanner);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,17 +90,7 @@ public class KelolaBuatApkFragment extends Fragment {
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterBanner.OnItemClick() {
-            @Override
-            public void onItemEditClick(int pos, DataItemBanner dataItemBanner) {
 
-            }
-
-            @Override
-            public void onItemDeleteClick(int pos, DataItemBanner dataItemBanner) {
-                    deleteBanner(dataItemBanner.getId());
-            }
-        });
         return view;
     }
 

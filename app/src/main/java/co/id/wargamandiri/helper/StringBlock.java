@@ -1,8 +1,6 @@
 package co.id.wargamandiri.helper;
 
 
-import org.jf.dexlib.Code.Opcode;
-import org.jf.dexlib.Util.Utf8Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -84,7 +82,7 @@ public class StringBlock {
     public void getStrings(List<String> list) {
         int size = getSize();
         for (int i = 0; i < size; i++) {
-            list.add(Utf8Utils.escapeString(getString(i)));
+//            list.add(Utf8Utils.escapeString(getString(i)));
         }
     }
 
@@ -105,11 +103,11 @@ public class StringBlock {
         LEDataOutputStream mStrings = new LEDataOutputStream(bOut);
         for (i = 0; i < size; i++) {
             offset[i] = len;
-            char[] charbuf = Utf8Utils.escapeSequence((String) list.get(i)).toCharArray();
-            mStrings.writeShort((short) charbuf.length);
-            mStrings.writeCharArray(charbuf);
-            mStrings.writeShort((short) 0);
-            len += (charbuf.length * 2) + 4;
+//            char[] charbuf = Utf8Utils.escapeSequence((String) list.get(i)).toCharArray();
+//            mStrings.writeShort((short) charbuf.length);
+//            mStrings.writeCharArray(charbuf);
+//            mStrings.writeShort((short) 0);
+//            len += (charbuf.length * 2) + 4;
         }
         int m_strings_size = bOut.size();
         int size_mod = m_strings_size % 4;
@@ -290,13 +288,13 @@ public class StringBlock {
     }
 
     private static final int[] getVarint(byte[] array, int offset) {
-        boolean more;
+        boolean more = false;
         int val = array[offset];
-        if ((val & Opcode.ODEXED_INSTANCE_VOLATILE) != 0) {
-            more = true;
-        } else {
-            more = false;
-        }
+//        if ((val & Opcode.ODEXED_INSTANCE_VOLATILE) != 0) {
+//            more = true;
+//        } else {
+//            more = false;
+//        }
         val &= 127;
         if (more) {
             return new int[]{(val << 8) | (array[offset + 1] & 255), 2};

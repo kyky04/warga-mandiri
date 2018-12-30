@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_medium">
+    android:padding="@dimen/spacing_small">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -11,78 +11,126 @@
         app:cardCornerRadius="@dimen/spacing_small"
         app:cardUseCompatPadding="true">
 
-        <RelativeLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
 
             <LinearLayout
-                android:id="@+id/lyt_parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:clickable="true"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_large">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/nama"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_member"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:paddingLeft="@dimen/spacing_medium"
+                    android:src="@drawable/default_avata" />
+
+                <LinearLayout
+                    android:id="@+id/lyt_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
+
+                    <TextView
+                        android:id="@+id/nama"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nama"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="3"
+                        android:text="Email" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nama"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textStyle="bold" />
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_medium">
 
-                <TextView
-                    android:id="@+id/email"
+                    <ImageButton
+                        android:id="@+id/btn_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:layout_margin="@dimen/spacing_small"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:background="@color/transparent"
+                        android:enabled="false"
+                        android:src="@drawable/ic_edit_black_24dp"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/btn_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/spacing_xlarge"
+                        android:layout_margin="@dimen/spacing_small"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:background="@color/transparent"
+                        android:enabled="false"
+                        android:src="@drawable/ic_delete_black_24dp"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/sw_member"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="3"
-                    android:text="Email" />
-
+                    android:layout_below="@+id/lay"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:padding="@dimen/spacing_medium" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lay"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal"
-                android:padding="@dimen/spacing_medium">
+                android:gravity="right"
+                android:orientation="horizontal">
 
-                <ImageButton
-                    android:visibility="gone"
-                    android:id="@+id/btn_edit"
+                <ImageView
+                    android:id="@+id/btn_info"
+                    android:tint="@color/colorAccent"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/spacing_xlarge"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:background="@color/transparent"
-                    android:enabled="false"
-                    android:src="@drawable/ic_edit_black_24dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:src="@drawable/ic_info" />
 
-                <ImageButton
-                    android:id="@+id/btn_delete"
+                <ImageView
+                    android:id="@+id/btn_chat"
+                    android:tint="@color/colorAccent"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/spacing_xlarge"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:background="@color/transparent"
-                    android:enabled="false"
-                    android:src="@drawable/ic_delete_black_24dp" />
-
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_medium"
+                    android:src="@drawable/ic_chat" />
 
             </LinearLayout>
-
-            <Switch
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:padding="@dimen/spacing_medium"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/lay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
+        </LinearLayout>
 
 
     </android.support.v7.widget.CardView>

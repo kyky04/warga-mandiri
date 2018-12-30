@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shadow_toolbar"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            android:paddingStart="72dp"
+            android:paddingLeft="72dp"
+            android:paddingTop="25dp"
+            android:paddingEnd="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="25dp">
+
+
+            <EditText
+                android:id="@+id/template_title"
+                style="@style/EditText.Dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nama Toko"
+                android:singleLine="true"
+                android:textSize="@dimen/headline_leading"
+                android:theme="@style/EditText.Dark" />
+
+
+            <EditText
+                android:id="@+id/author_name"
+                style="@style/EditText.Dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Moto Toko"
+                android:inputType="textPersonName"
+                android:theme="@style/EditText.Dark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Icon Toko"
+                android:textColor="@color/colorAccent" />
+
+            <ImageView
+                android:layout_marginTop="@dimen/spacing_large"
+                android:id="@+id/img_phone"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/shadow_meta"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:background="@drawable/shadow_toolbar"
+            android:backgroundTint="@color/color_divider"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/template_meta_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp" />
+
+    </LinearLayout>
+</FrameLayout>

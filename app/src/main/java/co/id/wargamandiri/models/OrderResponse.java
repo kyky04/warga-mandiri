@@ -3,6 +3,8 @@ package co.id.wargamandiri.models;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
+import co.id.wargamandiri.models.transaksi.order.DataItemOrder;
+
 public class OrderResponse{
 
 	@SerializedName("data")

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,13 +33,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import co.id.wargamandiri.R;
-import co.id.wargamandiri.adapter.AdapterProduk;
-import co.id.wargamandiri.models.DataItemPengumuman;
+import co.id.wargamandiri.adapter.EmptyAdapter;
+import co.id.wargamandiri.adapter.ProdukAdapter;
 import co.id.wargamandiri.models.DataItemProduk;
 import co.id.wargamandiri.models.ProdukResponse;
 import co.id.wargamandiri.utils.Session;
+import co.id.wargamandiri.utils.Tools;
+import co.id.wargamandiri.views.SpacingItemDecoration;
 
-import static co.id.wargamandiri.services.FastConstans.WEB_URL;
+import static co.id.wargamandiri.data.Constans.PRODUK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,15 +49,15 @@ import static co.id.wargamandiri.services.FastConstans.WEB_URL;
 public class MasterProdukFragment extends Fragment {
 
 
-    @BindView(R.id.rv_banner)
-    RecyclerView rvBanner;
+    @BindView(R.id.recycler)
+    RecyclerView recyclerView;
     @BindView(R.id.refresh)
     SwipeRefreshLayout refresh;
     @BindView(R.id.fab_add_banner)
-    FloatingActionButton fabAddBanner;
+    FloatingActionButton fabAdd;
     Unbinder unbinder;
 
-    AdapterProduk adapterBanner;
+    ProdukAdapter adapter;
 
     Session session;
 
@@ -67,32 +70,42 @@ public class MasterProdukFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_kelola, container, false);
+        View view = inflater.inflate(R.layout.fragment_kelola_data_toko, container, false);
+
         unbinder = ButterKnife.bind(this, view);
 
+        session = new Session(getActivity());
 
-        rvBanner.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapterBanner = new AdapterProduk(getActivity());
-        getPengumuman();
-        rvBanner.setAdapter(adapterBanner);
+        adapter = new ProdukAdapter(getActivity());
+        recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+
+        getData();
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getPengumuman();
+                getData();
             }
         });
 
-        adapterBanner.setOnItemClick(new AdapterProduk.OnItemClick() {
+        adapter.setOnItemClick(new ProdukAdapter.OnItemClickListener() {
             @Override
-            public void onItemEditClick(int pos, DataItemProduk dataItemBanner) {
-//                showEditDialogFullscreen(dataItemBanner);
+            public void onItemClick(int position) {
+//                upload();
             }
 
             @Override
-            public void onItemDeleteClick(int pos, DataItemProduk dataItemBanner) {
-                deleteBanner(dataItemBanner.getId());
+            public void onItemEdit(int position) {
+                edit(adapter.getItem(position));
+            }
+
+            @Override
+            public void onItemDelete(int position) {
+                delete(adapter.getItem(position).getId());
+
             }
         });
+
+        fabAdd.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -104,20 +117,32 @@ public class MasterProdukFragment extends Fragment {
 
     @OnClick(R.id.fab_add_banner)
     public void onViewClicked() {
-        showDialogFullscreen();
+        upload();
     }
 
-    private void getPengumuman() {
+    private void getData() {
         refresh.setRefreshing(true);
-        AndroidNetworking.get(WEB_URL + "api/backend/produk")
-//                .addQueryParameter("includes","kategori,image")
+        AndroidNetworking.get(PRODUK)
+                .addQueryParameter("includes","kategori,gambar")
+                .addQueryParameter("id_toko", String.valueOf(session.getUser().getData().getIdToko()))
                 .build()
                 .getAsObject(ProdukResponse.class, new ParsedRequestListener() {
                     @Override
                     public void onResponse(Object response) {
                         refresh.setRefreshing(false);
                         if (response instanceof ProdukResponse) {
-                            adapterBanner.swap(((ProdukResponse) response).getData());
+                            if(((ProdukResponse) response).getData().size() > 0){
+                                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                                recyclerView.addItemDecoration(new SpacingItemDecoration(2, Tools.dpToPx(getActivity(), 8), true));
+                                recyclerView.setHasFixedSize(true);
+                                recyclerView.setNestedScrollingEnabled(false);
+
+                                adapter.swap(((ProdukResponse) response).getData());
+                                recyclerView.setAdapter(adapter);
+                            }else {
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                recyclerView.setAdapter(new EmptyAdapter(getActivity()));
+                            }
                         }
                     }
 
@@ -140,7 +165,7 @@ public class MasterProdukFragment extends Fragment {
     }
 
 
-    private void showDialogFullscreen() {
+    private void upload() {
         FragmentManager fragmentManager = getFragmentManager();
         DialogProdukFragment newFragment = new DialogProdukFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -148,35 +173,35 @@ public class MasterProdukFragment extends Fragment {
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogProdukFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
-                getPengumuman();
+            public void sendResult() {
+                getData();
             }
         });
     }
 
-    private void showEditDialogFullscreen(DataItemPengumuman itemPengumuman) {
+    private void edit(DataItemProduk item) {
         FragmentManager fragmentManager = getFragmentManager();
-        DialogProdukFragment newFragment = DialogProdukFragment.newInstance(itemPengumuman);
+        DialogProdukFragment newFragment = DialogProdukFragment.newInstance(item);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.add(android.R.id.content, newFragment).addToBackStack(null).commit();
         newFragment.setOnCallbackResult(new DialogProdukFragment.CallbackResult() {
             @Override
-            public void sendResult(Object obj) {
-                getPengumuman();
+            public void sendResult() {
+                getData();
             }
         });
     }
 
-    private void deleteBanner(int id_banner) {
-        AndroidNetworking.delete(WEB_URL + "api/master/kategori/{id_kategori}")
-                .addPathParameter("id_kategori", String.valueOf(id_banner))
+    private void delete(int id) {
+        AndroidNetworking.delete(PRODUK + "/{id}")
+                .addPathParameter("id", String.valueOf(id))
                 .build()
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "DataItemPengumuman Berhasil Dihapus", Toast.LENGTH_SHORT).show();
-                        getPengumuman();
+                        Toast.makeText(getActivity(), "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                        getData();
                     }
 
                     @Override

@@ -5,34 +5,38 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="3dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    android:padding="@dimen/spacing_medium">
+
+
 
     <ImageView
         android:id="@+id/image_bg"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="170dp"
         android:foreground="@color/overlay_dark_30"
         android:scaleType="centerCrop"
         android:src="@drawable/image_1" />
 
     <LinearLayout
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/image_bg"
         android:id="@+id/lyt_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:clickable="true"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_large">
+        android:padding="@dimen/spacing_medium">
 
         <TextView
+            android:textColor="@color/white"
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category Name"
+            android:text="Slider Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+             />
 
 
     </LinearLayout>
@@ -45,29 +49,13 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:layout_margin="@dimen/spacing_small"
-            android:id="@+id/btn_edit"
+            android:layout_alignParentRight="true"
+            android:id="@+id/more"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/spacing_xlarge"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:background="@drawable/btn_rounded_white_outline"
-            android:enabled="false"
-            android:src="@drawable/ic_edit_black_24dp"
-            android:textColor="@android:color/white"
-            android:tint="@color/white" />
-
-        <ImageButton
-            android:layout_margin="@dimen/spacing_small"
-            android:id="@+id/btn_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/spacing_xlarge"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:background="@drawable/btn_rounded_white_outline"
-            android:enabled="false"
-            android:src="@drawable/ic_delete_black_24dp"
-            android:textColor="@android:color/white"
-            android:tint="@color/white" />
-
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="?android:attr/selectableItemBackground"
+            android:tint="@color/grey_60"
+            app:srcCompat="@drawable/ic_more_vert" />
 
     </LinearLayout>
 
